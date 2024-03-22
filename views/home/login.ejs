@@ -2,6 +2,12 @@
 
 <div style="width: 300px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; text-align: center;">
   <h2>Login Form</h2>
+  <% if (ok) { %>
+    <p style="color: rgb(0, 255, 30);"><%= ok %></p>
+  <% } %>
+  <% if (error) { %>
+    <p style="color: rgb(255, 0, 0);"><%= error %></p>
+  <% } %>
   <form action="login" method="post" onsubmit="return validateForm()">
     <input type="text" id="username" name="username" placeholder="Username" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
     <input type="password" id="password" name="password" placeholder="Password" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
