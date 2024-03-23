@@ -30,15 +30,12 @@ app.use(flash());
 //
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:false}));
-//
-
-//
-app.use('/',require('./routes/web/index'));
-app.use('/api',require('./routes/api/index'));
 //Set render
 app.set('views',path.join(__dirname,'views'));
 app.set('view engine','ejs');
-
+//
+app.use('/',require('./routes/web/index'));
+app.use('/api',require('./routes/api/index'));
 //Start the Server
 const PORT=9000;
 app.listen(process.env.PORT||PORT,()=>
