@@ -29,6 +29,16 @@ router.post('/login',passport.authenticate('login',
     failureRedirect: "/login?error=Wrong%20User%20Name%20or%20Password",
     failureFlash: true
 }));
+//Log Out
+router.get('/logout',(req,res,next)=>
+{
+    req.logOut((err)=>
+    {
+        if(err){return next(err);}
+        res.redirect('/');
+    });
+
+})
 //Sign Up
 router.get('/signup', async (req,res)=>
 {
