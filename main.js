@@ -12,29 +12,31 @@ var passport = require("passport");
 var setUpPassPort=require('./passportStrategy');
 var session = require("express-session");
 var flash = require("connect-flash");
+var cors = require("cors");
 //connect DB
 const app=express();
 mongoose.connect(uri);
 setUpPassPort();
 //Middleware
-app.use(cookieParser());
-app.use(session({
+app.use(cors());
+app.use(cookieParser());//???
+app.use(session({//for authen session
     secret:"doemlfgddfsoi!gjdsf5684561dsf",
     resave:false,
     saveUninitialized:false
 }));
+// app.use(flash());//???
 //
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
+app.use(passport.initialize());//???
+app.use(passport.session());//Luu thong tin session khi authenticated=> must above route or will be skipped
 //
 app.use(express.json());
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({extended:false}));//body into body.u body.p
 //Set render
-app.set('views',path.join(__dirname,'views'));
-app.set('view engine','ejs');
+app.set('views',path.join(__dirname,'views'));//views location
+app.set('view engine','ejs');//render template
 //
-app.use('/',require('./routes/web/index'));
+app.use('/',require('./routes/web/index'));//Route alway last
 app.use('/api',require('./routes/api/index'));
 //Start the Server
 const PORT=9000;
@@ -42,5 +44,3 @@ app.listen(process.env.PORT||PORT,()=>
 {
     console.log(`Server is running at Port: ${process.env.PORT||PORT}`);
 });
-
-
