@@ -25,10 +25,9 @@ app.use(session({//for authen session
     resave:false,
     saveUninitialized:false
 }));
-// app.use(flash());//???
-//
 app.use(passport.initialize());//???
 app.use(passport.session());//Luu thong tin session khi authenticated=> must above route or will be skipped
+app.use(flash());//???
 //
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:false}));//body into body.u body.p

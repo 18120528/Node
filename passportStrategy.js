@@ -35,12 +35,12 @@ module.exports=function()
       {
         if(err){return done(err);}
         if(isMatch) {return done(null,user);}
-        else {return done(null,false,{message: "Wrong Password"});}
+        else {return done(null,false,{message: "Wrong Password!"});}
       });
     }
     else
     {
-      return done(null,false);
+      return done(null,false, { message: "The Username Do Not Existed!" });
     }
   }));
 }

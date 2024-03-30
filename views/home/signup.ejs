@@ -1,9 +1,6 @@
 <%- include('../_partial/_header'); -%>
 <div style="width: 300px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; text-align: center;">
   <h2>Sign Up</h2>
-  <% if (error) { %>
-    <p style="color: red;"><%= error %></p>
-  <% } %>
   <form action="signup" method="post" onsubmit="return validateForm(event)">
     <input type="text" id="username" name="username" placeholder="Username" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
     <input type="email" id="email" name="email" placeholder="Email" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>

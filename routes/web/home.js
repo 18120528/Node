@@ -4,6 +4,8 @@ const express=require('express');
 const router=express.Router();
 const fs=require('fs').promises;
 var passport = require("passport");
+
+var ifLoggin =require("../../auth/auth");
 var User=require('../../models/users');
 //
 
@@ -19,14 +21,12 @@ router.get('/about',async(req,res)=>
 //Login
 router.get('/login',async(req,res)=>
 {
-    const error=req.query.error;
-    const ok=req.query.ok;
-    await res.status(200).render('home/login',{error,ok});
+    await res.status(200).render('home/login');
 });
 router.post('/login',passport.authenticate('login',
 {
     successRedirect: "/",
-    failureRedirect: "/login?error=Wrong%20User%20Name%20or%20Password",
+    failureRedirect: "/login",
     failureFlash: true
 }));
 //Log Out
@@ -42,23 +42,22 @@ router.get('/logout',(req,res,next)=>
 //Sign Up
 router.get('/signup', async (req,res)=>
 {
-    const error=req.query.error;
-    await res.status(200).render('home/signup',{error});
+    await res.status(200).render('home/signup');
 });
-router.post('/signup', async (req, res,next) => {
+router.post('/signup', async (req, res) => {
     try {
         var body = req.body;
         const exist = await User.find({ $or: [{ username: body.username }, { email: body.email }] });
         console.log(exist.length);
         if (exist.length>0) 
         {
-            console.log('User already exists!');
-            res.redirect('/signup?error=Username%20already%20exists');
+            req.flash("error", "User or Email Already Existed!!!");
+            res.redirect('/signup');
         } 
         else 
         {
             User.create(body);
-            res.redirect('/login?ok=User%20Created');
+            res.redirect('/login');
         }
     } catch (err) 
     {
@@ -67,6 +66,10 @@ router.post('/signup', async (req, res,next) => {
         res.status(500).send('Timeout error occurred. Please try again later.');
     }
 });
-
+//article post
+router.get("/myposts", ifLoggin, async (req,res)=>
+{
+    res.status(200).render("home/posts");
+})
 //export this module
 module.exports=router;
