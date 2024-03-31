@@ -1,0 +1,43 @@
+<%- include('../_partial/_header'); -%>
+<div style="width: 300px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; text-align: center;">
+  <h2>Sign Up</h2>
+  <form action="signup" method="post" onsubmit="return validateForm(event)">
+    <input type="text" id="username" name="username" placeholder="Username" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
+    <input type="email" id="email" name="email" placeholder="Email" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
+    <input type="password" id="password" name="password" placeholder="Password" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
+    <input type="password" id="re_password" placeholder="Re-enter Password" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
+    <input type="submit" value="Sign Up" style="width: 100%; padding: 10px; margin-top: 10px; box-sizing: border-box; border: none; border-radius: 3px; background-color: #007bff; color: #fff; cursor: pointer;">
+  </form>
+</div>
+
+<script>
+  function validateForm(event) {
+    event.preventDefault(); // Prevents form submission
+
+    var username = document.getElementById("username").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var re_password = document.getElementById("re_password").value;
+
+    if (username === "") {
+      alert("Username cannot be blank");
+      return false;
+    }
+    if (email === "") {
+      alert("Email cannot be blank");
+      return false;
+    }
+    if (password === "") {
+      alert("Password cannot be blank");
+      return false;
+    }
+    if (password !== re_password) {
+      alert("Passwords do not match");
+      return false;
+    }
+
+    // If all validations pass, you can submit the form manually
+    document.querySelector('form').submit();
+  }
+</script>
+<%- include('../_partial/_footer'); -%>
