@@ -29,9 +29,9 @@ router.post('/login',passport.authenticate('login',
     failureFlash: true
 }));
 //Log Out
-router.get('/logout',(req,res,next)=>
+router.get('/logout',async (req,res,next)=>
 {
-    req.logOut((err)=>
+    await req.logOut((err)=>
     {
         if(err){return next(err);}
         res.redirect('/');

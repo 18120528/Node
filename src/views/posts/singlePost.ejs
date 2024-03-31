@@ -1,0 +1,22 @@
+<%- include ("../_partial/_header.ejs"); %>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h2><%= Post.title %></h2>
+        </div>
+        <div class="col-md-4">
+            <h3>posted by <%= Post.author %></h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body" style="background-color: #ff9d00b6;">
+                    <p style="font-size: 18px;"><%= Post.content %></p>
+                </div>
+            </div>
+            <h6><%= Post.createDate %></h6>
+        </div>
+    </div>
+<%- include ("../_partial/_footer.ejs"); %>

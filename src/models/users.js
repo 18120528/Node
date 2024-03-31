@@ -31,10 +31,10 @@ userSchema.pre("save", async function(next)
     }
 });
 
-userSchema.methods.checkPass=function(dbPass,done)
+userSchema.methods.checkPass=function(reqPass,done)
 {
     if(!this.password) {return done(err);}
-    bcrypt.compare(dbPass, this.password, (err,isMatch)=>
+    bcrypt.compare(reqPass, this.password, (err,isMatch)=>
     {
         done(err,isMatch);
     });
