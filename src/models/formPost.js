@@ -5,7 +5,7 @@ var postSchema=new mongoose.Schema({
     content: {type: String, require: false},
     author: {type: String, require: true},
     createDate: {type: Date, default: Date.now},
-    image: {type: mongoose.Schema.Types.ObjectId, required: false},
+    image: {type: String, required: false},
     UserID: {type: mongoose.Schema.Types.ObjectId, required: false},
     Public: {type: Boolean, default:false, required: false}
 });

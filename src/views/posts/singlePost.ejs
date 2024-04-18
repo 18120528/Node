@@ -1,6 +1,17 @@
 <%- include ("../_partial/_header.ejs"); %>
-
+    
     <div class="row">
+        <div class="col-sm-4 col-md-4">
+             <div class="thumbnail">
+                <a>
+                    <% if(Post.image) { %>
+                        <img src="<%= '/'+ Post.image %> " alt="img" />
+                    <% } else { %>
+                        <img src="https://i.ibb.co/1Qx9MmF/11f7815c670216f78272924c60e5d32caf075b7775137552c652113900060c5b-1.jpg"  alt="img" />
+                    <% } %>
+                </a>
+             </div>
+        </div>
         <div class="col-md-8">
             <h2><%= Post.title %></h2>
         </div>
@@ -12,11 +23,18 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-body" style="background-color: #ff9d00b6;">
+                <div class="panel-body" style="background-color: #dad7d1b6;">
                     <p style="font-size: 18px;"><%= Post.content %></p>
                 </div>
             </div>
             <h6><%= Post.createDate %></h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/post/" class="btn btn-default"role="button">
+                Return
+            </a>
         </div>
     </div>
 <%- include ("../_partial/_footer.ejs"); %>

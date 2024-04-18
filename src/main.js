@@ -1,45 +1,50 @@
-'use strict'
-//import modules
-const express=require('express');
-const fs=require('fs').promises;
+'use strict';
+
+// Import modules
+const express = require('express');
+const fs = require('fs').promises;
 const path = require('path');
 const mongoose = require('mongoose');
-const uri=require('./models/params/mongoProfile');
-var bodyParser = require('body-parser');
-//
-var cookieParser = require("cookie-parser");
-var passport = require("passport");
-var setUpPassPort=require('./configs/passportStrategy');
-var session = require("express-session");
-var flash = require("connect-flash");
-var cors = require("cors");
-//connect DB
-const app=express();
+const uri = require('./models/remote/mongoProfile');
+const bodyParser = require('body-parser');
+const cookieParser = require("cookie-parser");
+const passport = require("passport");
+const setUpPassport = require('./configs/passportStrategy');
+const session = require("express-session");
+const flash = require("connect-flash");
+const cors = require("cors");
+// Connect to the database
+const app = express();
 mongoose.connect(uri);
-setUpPassPort();
-//Middleware
+setUpPassport();
+
+// Middleware
 app.use(cors());
-app.use(cookieParser());//???
-app.use(session({//for authen session
-    secret:"doemlfgddfsoi!gjdsf5684561dsf",
-    resave:false,
-    saveUninitialized:false
+app.use(cookieParser());
+app.use(session({ // for authentication session
+    secret: "doemlfgddfsoi!gjdsf5684561dsf",
+    resave: false,
+    saveUninitialized: false
 }));
-app.use(passport.initialize());//???
-app.use(passport.session());//Luu thong tin session khi authenticated=> must above route or will be skipped
-app.use(flash());//???
-//
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+// Parse incoming request bodies
 app.use(express.json());
-app.use(bodyParser.urlencoded({extended:false}));//body into body.u body.p
-//Set render
-app.set('views',path.join(__dirname,'views'));//views location
-app.set('view engine','ejs');//render template
-//
-app.use('/',require('./routes/web/index'));//Route alway last
-app.use('/api',require('./routes/api/index'));
-//Start the Server
-const PORT=9000;
-app.listen(process.env.PORT||PORT,()=>
-{
-    console.log(`Server is running at Port: ${process.env.PORT||PORT}`);
+app.use(bodyParser.urlencoded({ extended: false }));
+// Set up method override middleware using '_method' query parameter
+
+// Set up view engine
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+// Define your routes
+app.use('/src/upload/images', express.static(path.join(__dirname, '/upload/images')));
+app.use('/', require('./routes/web/index'));
+app.use('/api', require('./routes/api/index'));
+
+// Start the server
+const PORT = 9000;
+app.listen(process.env.PORT || PORT, () => {
+    console.log(`Server is running at Port: ${process.env.PORT || PORT}`);
 });
