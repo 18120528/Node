@@ -7,14 +7,16 @@ const fs=require('fs');
 const path = require('path');
 //custom middleware
 const post = require("../../models/formPost");
-const ifLoggin = require("../../middlewares/auth/auth");
+const Cmt = require("../../models/comment");
+const ifLoggin = require("../../middlewares/auth/authen");
 const upload=require('../../middlewares/upload/uploadImage');
+const ifAuthorized=require('../../middlewares/auth/author');
 // Set up middleware
 router.use(ifLoggin);
 // Post page
 router.get("/", async (req, res) => {
     try {
-        const postList = await post.find({ UserID: req.user._id });
+        const postList = await post.find({ UserID: req.user._id }).sort({ createDate: -1 });
         res.status(200).render("posts/myPost", { postList });
     } catch (err) {
         if (err) {
@@ -58,7 +60,7 @@ router.post("/add", upload.single('image'), async (req, res) => {
 // Access
 router.get('/:postID', async (req, res) => {
     try {
-        const Post = await post.findById(req.params.postID);
+        let Post = await post.findById(req.params.postID).populate('comments');
         res.render("posts/singlePost", { Post });
     } catch (err) {
         req.flash("error", "This post does not exist!!!");
@@ -66,8 +68,8 @@ router.get('/:postID', async (req, res) => {
     }
 });
 
-// Edit page
-router.get('/:postID/edit', async (req, res) => {
+//Get Edit page
+router.get('/:postID/edit', ifAuthorized, async (req, res) => {
     try {
         const Post = await post.findById(req.params.postID);
         res.render("posts/editPost", { Post });
@@ -77,20 +79,18 @@ router.get('/:postID/edit', async (req, res) => {
     }
 });
 //Edit
-router.post('/:postID',upload.single('image') ,async (req, res) => {
+router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) => {
+    //Update
     if(req.body._method==='PUT')
     {
         try {
             let Post = await post.findById(req.params.postID);
-            if(Post.image)//local
+            fs.unlink(Post.image, (err) => //local
             {
-                fs.unlink(Post.image, (err) => 
-                {
-                    if (err) {
-                        console.error('Error removing image:', err);
-                    }
-                });
-            }
+                if (err) {
+                    console.error('Error removing image:', err);
+                }
+            });
             let img="";
             if(req.file)
             {
@@ -105,19 +105,17 @@ router.post('/:postID',upload.single('image') ,async (req, res) => {
             }
         }
     }
+    //Delete
     if(req.body._method==='DELETE')
     {
         try {
             let Post = await post.findById(req.params.postID);
-            if(Post.image)//img
+            fs.unlink(Post.image, (err) => 
             {
-                fs.unlink(Post.image, (err) => 
-                {
-                    if (err) {
-                        console.error('Error removing image:', err);
-                    }
-                });
-            }
+                if (err) {
+                    console.error('Error removing image:', err);
+                }
+            });
             await post.findByIdAndDelete(req.params.postID);//db
             res.redirect("/post/");
         } catch (err) {
@@ -128,6 +126,30 @@ router.post('/:postID',upload.single('image') ,async (req, res) => {
         }
     }
 });
-
+//comment
+router.post('/:postID/comment', ifAuthorized, async (req, res) =>//Post comment 
+{
+        if(req.body._method=='POST')
+        {
+            try 
+            {
+                const comment=await Cmt.create({
+                    content: req.body.content,
+                    author: req.user.username
+                });
+                await post.findByIdAndUpdate(
+                    req.params.postID,
+                    { $push: { comments: comment._id }
+                });
+                res.redirect("/post/" + req.params.postID);
+            } catch (err) 
+            {
+                if (err) {
+                    req.flash("error", err.message);
+                    res.redirect("/post/");
+                }
+            }
+        }
+});
 // Export this module
 module.exports = router;
