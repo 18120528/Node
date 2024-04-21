@@ -1,33 +1,52 @@
-<html> 
+<html>
 <head>
     <meta charset="utf-8">
     <title>User Page</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #15191d;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes up at least the height of the viewport */
+        }
+        
+        .navbar {
+            background-color: #f8f9fa; /* Change navbar background color */
+        }
+        
+        .container-main {
+            flex-grow: 1; /* Allow container to grow to fill available vertical space */
+            background-color: #cfd1d3; /* Change main container background color */
+            padding: 20px; /* Add padding as needed */
+        }
+    </style>
 </head>
-<body class="panel-body"  style="background-color: #15191d;">
+<body>
 <div class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container">
+    <div class="container" style="font-weight: bold;">
         <div class="navbar-header">
-        <a class="navbar-brand" href="/">Home</a>         
+            <a class="navbar-brand" href="/">Home</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
-        <li><a href="/api">API</a></li>
-        <li><a href="/about">About</a></li>
-        
-        <% if(currentUser != null) { %>
-            <li><a href="/post">Post</a></li>
-            <li><a href="#">Welcome <%= currentUser.username %> !</a></li>
-            <li><a href="/logout">Logout</a></li>
-        <%}%>
-        <% if(currentUser == null) { %> 
-        <li><a href="/login">Log In</a></li>
-        <li><a href="/signup">Sign Up</a></li>
-        <% } %>
+            <li><a href="/api">API</a></li>
+            <li><a href="/about">About</a></li>
+            <% if(currentUser != null) { %>
+                <li><a href="/post">Post</a></li>
+                <li><a href="#">Welcome <%= currentUser.username %> !</a></li>
+                <li><a href="/logout">Logout</a></li>
+            <%}%>
+            <% if(currentUser == null) { %>
+                <li><a href="/login">Log In</a></li>
+                <li><a href="/signup">Sign Up</a></li>
+            <% } %>
         </ul>
     </div>
 </div>
 
-<div class="container"  style="background-color: #cfd1d3;">
+<div class="container container-main">
     <% if(error.length>0) { %>
         <div class="alert alert-danger" role="alert">
             <%= error %>
