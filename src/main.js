@@ -11,6 +11,7 @@ const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const setUpPassport = require('./configs/passportStrategy');
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const cors = require("cors");
 // Connect to the database
@@ -22,9 +23,13 @@ setUpPassport();
 app.use(cors());
 app.use(cookieParser());
 app.use(session({ // for authentication session
-    secret: "doemlfgddfsoi!gjdsf5684561dsf",
-    resave: false,
-    saveUninitialized: false
+    secret: "ronnnq18120528hcmus",//should be environment var
+    resave: false,//change only
+    saveUninitialized: false,//true if save personal like shopping cart
+    store: MongoStore.create({mongoUrl:uri}),
+    cookie: { 
+        expires: new Date(new Date().setHours(23, 59, 59, 999)) // End of the current day
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());

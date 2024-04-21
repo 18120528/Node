@@ -7,6 +7,7 @@ var postSchema=new mongoose.Schema({
     createDate: {type: Date, default: Date.now},
     image: {type: String, required: false},
     UserID: {type: mongoose.Schema.Types.ObjectId, required: false},
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'comments' }],
     Public: {type: Boolean, default:false, required: false}
 });
 //

@@ -4,23 +4,23 @@ const express=require('express');
 const router=express.Router();
 const fs=require('fs').promises;
 var passport = require("passport");
-
-var User=require('../../models/users');
+const post = require("../../models/formPost");
 //
-
+var User=require('../../models/users');
 //
 router.get('/',async(req,res)=>
 {
-    await res.status(200).render("home/index");
+    let postList=await post.find().sort({ createDate: -1 });
+    res.status(200).render("home/index",{postList});
 });
 router.get('/about',async(req,res)=>
 {
-    await res.status(200).send('18120528-Nguyen Nhu Quang');
+    res.status(200).send('18120528-Nguyen Nhu Quang');
 });
 //Login
 router.get('/login',async(req,res)=>
 {
-    await res.status(200).render('home/login');
+    res.status(200).render('home/login');
 });
 router.post('/login',passport.authenticate('login',
 {
@@ -31,7 +31,7 @@ router.post('/login',passport.authenticate('login',
 //Log Out
 router.get('/logout',async (req,res,next)=>
 {
-    await req.logOut((err)=>
+    req.logOut((err)=>
     {
         if(err){return next(err);}
         res.redirect('/');
@@ -41,7 +41,7 @@ router.get('/logout',async (req,res,next)=>
 //Sign Up
 router.get('/signup', async (req,res)=>
 {
-    await res.status(200).render('home/signup');
+    res.status(200).render('home/signup');
 });
 router.post('/signup', async (req, res) => {
     try {
