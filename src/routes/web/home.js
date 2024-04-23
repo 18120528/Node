@@ -4,12 +4,28 @@ const express=require('express');
 const router=express.Router();
 const fs=require('fs').promises;
 var passport = require("passport");
+//
 const post = require("../../models/formPost");
+const User=require('../../models/users');
 //
-var User=require('../../models/users');
+const activeSessions = {};
 //
-router.get('/',async(req,res)=>
+router.get('/', async(req,res)=>
 {
+    if(req.session.passport)
+    {
+        if(activeSessions[req.user.id] && activeSessions[req.user.id]!=req.sessionID)
+        {
+            req.session.destroy();
+            res.locals.currentUser=null;
+            res.status(200).render('home/existed');
+        }
+        else
+        {
+            let userId = req.user.id;
+            activeSessions[userId] = req.sessionID;
+        }
+    }
     let postList=await post.find().sort({ createDate: -1 });
     res.status(200).render("home/index",{postList});
 });
@@ -31,12 +47,19 @@ router.post('/login',passport.authenticate('login',
 //Log Out
 router.get('/logout',async (req,res,next)=>
 {
+    for (let userID in activeSessions) 
+    {
+        if (activeSessions[userID] === req.sessionID) 
+        {
+            delete activeSessions[userID];
+        }
+    }
     req.logOut((err)=>
     {
         if(err){return next(err);}
+        req.session.destroy();
         res.redirect('/');
     });
-
 })
 //Sign Up
 router.get('/signup', async (req,res)=>
