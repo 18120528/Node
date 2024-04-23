@@ -8,7 +8,7 @@ var passport = require("passport");
 const post = require("../../models/formPost");
 const User=require('../../models/users');
 //
-const activeSessions = {};
+const activeSessions = {};//not scale good
 //
 router.get('/', async(req,res)=>
 {
