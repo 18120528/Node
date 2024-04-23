@@ -14,12 +14,12 @@ async function ifAuthorized(req, res, next) {
         } else {
             // User is not authorized, send a 403 Forbidden response
             req.flash("error", "Forbidden! You don't have the authorize");
-            res.redirect("/post");
+            res.redirect("/");
         }
     } catch (error) {
         // Handle any errors that occur (e.g., post not found)
-        req.flash("error", "This post does not exist to edit!");
-        res.redirect("/post");
+        req.flash("error",error);
+        res.redirect("/");
     }
 }
 

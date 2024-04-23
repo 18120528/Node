@@ -28,13 +28,16 @@ module.exports=function()
     passwordField: 'password'
   },async (username, password, done)=>
   {
-    user=await User.findOne({username: username});
+    let user=await User.findOne({username: username});
     if(user)
     {
       user.checkPass(password,(err,isMatch)=>
       {
         if(err){return done(err);}
-        if(isMatch) {return done(null,user);}
+        if(isMatch) 
+        {
+          return done(null,user);
+        }
         else {return done(null,false,{message: "Wrong Password!"});}
       });
     }

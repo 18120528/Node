@@ -8,8 +8,9 @@ const path = require('path');
 //custom middleware
 const post = require("../../models/formPost");
 const Cmt = require("../../models/comment");
-const ifLoggin = require("../../middlewares/auth/authen");
 const upload=require('../../middlewares/upload/uploadImage');
+const ifLoggin = require("../../middlewares/auth/authen");
+const ifAdmin = require("../../middlewares/auth/admin");
 const ifAuthorized=require('../../middlewares/auth/author');
 // Set up middleware
 router.use(ifLoggin);
@@ -60,10 +61,11 @@ router.post("/add", upload.single('image'), async (req, res) => {
 // Access
 router.get('/:postID', async (req, res) => {
     try {
-        let Post = await post.findById(req.params.postID).populate('comments');
-        res.render("posts/singlePost", { Post });
+        let Post = await post.findById(req.params.postID).populate({ path: 'comments', options: { sort: { createDate: -1 } } });
+        let comments = Post.comments;
+        res.render("posts/singlePost", { Post,  comments });        
     } catch (err) {
-        req.flash("error", "This post does not exist!!!");
+        req.flash("error", err);
         res.redirect("/post");
     }
 });
@@ -80,7 +82,7 @@ router.get('/:postID/edit', ifAuthorized, async (req, res) => {
 });
 //Edit
 router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) => {
-    //Update
+    //Update a post
     if(req.body._method==='PUT')
     {
         try {
@@ -105,7 +107,7 @@ router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) =
             }
         }
     }
-    //Delete
+    //Delete a post
     if(req.body._method==='DELETE')
     {
         try {
@@ -127,8 +129,9 @@ router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) =
     }
 });
 //comment
-router.post('/:postID/comment', ifAuthorized, async (req, res) =>//Post comment 
+router.post('/:postID/comment', ifAdmin, async (req, res) =>//Post comment 
 {
+        //Create a comment
         if(req.body._method=='POST')
         {
             try 
@@ -147,6 +150,25 @@ router.post('/:postID/comment', ifAuthorized, async (req, res) =>//Post comment
                 if (err) {
                     req.flash("error", err.message);
                     res.redirect("/post/");
+                }
+            }
+        }
+        //Delete a comment
+        if(req.body._method=='DELETE')
+        {
+            try 
+            {
+                let comment_Id=req.body.comment_Id;
+                await post.findByIdAndUpdate(
+                    req.params.postID,
+                    { $pull: { comments: comment_Id } });
+                await Cmt.findByIdAndDelete(comment_Id);
+                res.redirect("/post/" + req.params.postID);
+            } catch (err)
+            {
+                if (err) {
+                    req.flash("error", err.message);
+                    res.redirect("/post/" + req.params.postID);
                 }
             }
         }
