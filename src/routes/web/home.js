@@ -7,23 +7,25 @@ var passport = require("passport");
 //
 const post = require("../../models/formPost");
 const User=require('../../models/users');
-//
-const activeSessions = {};//not scale good
+const Session=require('../../models/activeSession');
 //
 router.get('/', async(req,res)=>
 {
     if(req.session.passport)
     {
-        if(activeSessions[req.user.id] && activeSessions[req.user.id]!=req.sessionID)
+        let activeSessions=await Session.findOne({ userID: req.user.id });
+        if(activeSessions)
         {
-            req.session.destroy();
-            res.locals.currentUser=null;
-            res.status(200).render('home/existed');
+            if(activeSessions.sessionID!=req.sessionID)
+            {
+                req.session.destroy();
+                res.locals.currentUser=null;
+                return res.status(200).render('home/existed');
+            }
         }
         else
         {
-            let userId = req.user.id;
-            activeSessions[userId] = req.sessionID;
+            Session.create({userID: req.user.id, sessionID: req.sessionID});
         }
     }
     let postList=await post.find().sort({ createDate: -1 });
@@ -47,13 +49,7 @@ router.post('/login',passport.authenticate('login',
 //Log Out
 router.get('/logout',async (req,res,next)=>
 {
-    for (let userID in activeSessions) 
-    {
-        if (activeSessions[userID] === req.sessionID) 
-        {
-            delete activeSessions[userID];
-        }
-    }
+    await Session.findOneAndDelete({ userID: req.user.id, sessionID: req.sessionID });
     req.logOut((err)=>
     {
         if(err){return next(err);}
