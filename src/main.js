@@ -29,7 +29,7 @@ app.use(session({ // for authentication session
     store: MongoStore.create({mongoUrl:uri}),
     cookie: { 
         // expires: new Date(new Date().setHours(23, 59, 59, 999)) // End of the current day
-        expires: new Date(Date.now() + (2 * 60 * 60 * 1000))
+        expires: new Date(Date.now() + (1 * 60 * 60 * 1000))
     }
 }));
 app.use(passport.initialize());
