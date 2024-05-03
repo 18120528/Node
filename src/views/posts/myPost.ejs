@@ -9,18 +9,18 @@
             <a href="/post/add" type="button" class="btn btn-primary">New Post</a>
         </div>
     </div>
-    <div class="col-md-12">
     <% postList.forEach(Post =>
     { %>
-        <div class="row" style="border-top: 1px solid #b5b9bd; border-bottom: 1px solid #b5b9bd">
-            <a href="/post/<%= Post._id %>"><h4><%= Post.title %></h4></a>
-            <h5><%= Post.author %> at: <%= new Date(Post.createDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></h5>
-            <p>
-                <a href="/post/<%= Post._id %>/edit" class="btn btn-info"role="button">
-                    Edit
-                </a>
-            </p>
+        <div class="col-md-11">
+            <div class="row" style="border-top: 1px solid #b5b9bd; border-bottom: 1px solid #b5b9bd">
+                <a href="/post/<%= Post._id %>"><h4><%= Post.title %></h4></a>
+                <h5><%= Post.author %> at: <%= new Date(Post.createDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></h5>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <a href="/post/<%= Post._id %>/edit" class="btn btn-success" role="button">
+                Edit
+            </a>
         </div>
     <% }) %>
-    </div>
 <%- include ("../_partial/_footer.ejs"); %>

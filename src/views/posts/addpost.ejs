@@ -1,44 +1,94 @@
 <%- include ("../_partial/_header.ejs"); %>
-    <div class="row">
-        <div class="col-md-6">
-            <h1>New Post - VNUHCM</h1>
-        </div>
-    </div>
-    
-    <div class="row">
-        <div class="col-md-6">
-            <form action="/post/add" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
-                <div class="form-group">
-                    <label for="inputTitle">Title</label>
-                    <input type="text" class="form-control" placeholder="Title" id="inputTitle" name="title"/>
-                </div>
-    
-                <div class="form-group">
-                    <label for="inputContent">Content</label>
-                    <textarea class="form-control" rows="3" id="inputContent" placeholder="Content" name="content"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <input type="file" name="image" />
-                </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" href="#" role="button">Create</button>
-                </div>
-            </form>
-        </div>
+<div class="row">
+    <div class="col-md-6">
+        <h1>New Post - VNUHCM</h1>
     </div>
-    
-    <script>
-        function validateForm() {
-            var title = document.getElementById("inputTitle").value;
-            if (title.trim() == "") {
-                alert("Title cannot be empty");
-                return false;
-            }
-            return true;
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form action="/post/add" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="inputTitle">Title</label>
+                <textarea class="form-control" id="inputTitle" name="title" placeholder="Title" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="inputContent">Content</label>
+                <textarea class="form-control" style="resize: none;" rows="10" id="inputContent" placeholder="Content" name="content"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <input type="file" name="image" accept="image/*" onchange="previewImage(event)" />
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" href="#" role="button">Create</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <a>
+            <div id="previewContainer"></div>
+        </a>
+    </div>
+</div>
+
+<script>
+    // Function to preview the selected image
+    function previewImage(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const MAX_WIDTH = 500;
+                    const MAX_HEIGHT = 500;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const dataUrl = canvas.toDataURL('image/jpeg');
+                    const preview = document.createElement('img');
+                    preview.src = dataUrl;
+                    preview.classList.add('img-thumbnail'); // Adding Bootstrap class for styling
+                    const previewContainer = document.getElementById('previewContainer');
+                    previewContainer.innerHTML = ''; // Clear previous preview
+                    previewContainer.appendChild(preview);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
         }
-    </script>
-    
+    }
+
+    // Function to validate the form
+    function validateForm() {
+        var title = document.getElementById("inputTitle").value;
+        if (title.trim() == "") {
+            alert("Title cannot be empty");
+            return false;
+        }
+        return true;
+    }
+</script>
 
 <%- include ("../_partial/_footer.ejs"); %>
