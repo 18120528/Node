@@ -87,16 +87,16 @@ router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) =
     {
         try {
             let Post = await post.findById(req.params.postID);
-            fs.unlink(Post.image, (err) => //local
-            {
-                if (err) {
-                    console.error('Error removing image:', err);
-                }
-            });
-            let img="";
+            let img=Post.image;
             if(req.file)
             {
                 img=req.file.path;
+                fs.unlink(Post.image, (err) => //local
+                {
+                    if (err) {
+                        console.error('Error removing image:', err);
+                    }
+                });                                                        
             }
             await Post.updateOne({ title: req.body.title, content: req.body.content, image: img });
             res.redirect("/post/" + req.params.postID);
@@ -118,6 +118,7 @@ router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) =
                     console.error('Error removing image:', err);
                 }
             });
+            await Cmt.findByIdAndDelete(Post.comments);
             await post.findByIdAndDelete(req.params.postID);//db
             res.redirect("/post/");
         } catch (err) {

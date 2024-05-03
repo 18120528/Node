@@ -1,5 +1,21 @@
 <%- include("../_partial/_header.ejs"); %>
 
+<style>
+    .thumbnail img {
+        max-width: 500px;
+        max-height: 500px;
+        width: auto;
+        height: auto;
+        background: none;
+    }
+    .thumbnail {
+        display: inline-block;
+        position: relative;
+        background: #dad7d1b6;
+        overflow: hidden;
+    }
+</style>
+
 <div class="row">
     <div class="col-md-6">
         <h1>Edit: <%= Post.title %></h1>
@@ -15,16 +31,16 @@
             </div>
             <div class="form-group">
                 <label for="inputTitle">Title</label>
-                <input type="text" class="form-control" id="inputTitle" name="title" placeholder="Title" value="<%= Post.title %>" />
+                <textarea class="form-control" id="inputTitle" name="title" placeholder="Title" rows="3"><%= Post.title %></textarea>
             </div>
 
             <div class="form-group">
                 <label for="inputContent">Content</label>
-                <textarea class="form-control" rows="3" id="inputContent" name="content" placeholder="Content"><%= Post.content %></textarea>
+                <textarea class="form-control" style="resize: none;" rows="10" id="inputContent" name="content" placeholder="Content"><%= Post.content %></textarea>
             </div>
 
             <div class="form-group">
-                <input type="file" name="image" />
+                <input type="file" name="image" accept="image/*" onchange="previewImage(event)" />
             </div>
 
             <!-- Buttons for updating and deleting in the same row -->
@@ -34,9 +50,31 @@
             </div>
         </form>
     </div>
+
+    <div class="col-md-6">
+        <div class="thumbnail">
+            <a>
+                <img id="previewImg" src="<%= Post.image ? '/' + Post.image : 'https://i.ibb.co/RDjpxcw/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder-2-JA6-BFB.jpg' %>" alt="img" />
+            </a>
+        </div>
+    </div>
 </div>
 
 <script>
+    // Function to preview the selected image
+    function previewImage(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.getElementById('previewImg');
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Function to validate the form
     function validateForm(event) {
         const title = document.getElementById("inputTitle").value;
         if (title.trim() === "") {
@@ -47,13 +85,13 @@
         return true;
     }
 
+    // Function to set the method for form submission
     function setMethod(method) {
-        // Set the method input value based on the button clicked
         document.getElementById('methodInput').value = method;
     }
 
+    // Function to confirm post deletion
     function confirmDelete() {
-        // Confirm with the user before deleting
         const confirmed = confirm("Are you sure you want to delete this post?");
         if (confirmed) {
             setMethod('DELETE');

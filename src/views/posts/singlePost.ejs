@@ -1,22 +1,36 @@
 <%- include ("../_partial/_header.ejs"); %>
-    
+<style>
+    .thumbnail img {
+        max-width: 500px;
+        max-height: 500px;
+        width: auto;
+        height: auto;
+    }
+    .thumbnail {
+        display: inline-block;
+        position: relative;
+        background: #dad7d1b6;
+        overflow: hidden;
+    }
+</style>
+
     <div class="row">
-        <div class="col-sm-4 col-md-4">
+        <div class="col-sm-4 col-md-6">
              <div class="thumbnail">
                 <a>
                     <% if(Post.image) { %>
                         <img src="<%= '/'+ Post.image %> " alt="img" />
                     <% } else { %>
-                        <img src="https://i.ibb.co/1Qx9MmF/11f7815c670216f78272924c60e5d32caf075b7775137552c652113900060c5b-1.jpg"  alt="img" />
+                        <img src="https://i.ibb.co/RDjpxcw/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder-2-JA6-BFB.jpg"  alt="img" />
                     <% } %>
                 </a>
              </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-6">
             <h2><%= Post.title %></h2>
         </div>
         <div class="col-md-4">
-            <h3>Posted by: <%= Post.author %></h3>
+            <h3>Posted by: <a href="/profile/<%= Post.author %>"><%= Post.author %></a></h3>
         </div>
     </div>
 
@@ -48,26 +62,26 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
             <% comments.forEach(cmt =>
             { %>
-            <div >
+            <div class="col-md-11">
                 <h4 class="panel-body" style="background-color: #dad7d1b6;"><%= cmt.content %></h4>
                 <h6>By: <%= cmt.author %>, at: <%= new Date(cmt.createDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></h6>
             </div>
             <% if(currentUser.username==='admin')<!-- -->
             { %>
-            <form action="/post/<%= Post._id %>/comment" method="POST">
-            <div class="form-group">
-                <input type="hidden" name="_method" value="DELETE" id="methodInput" />
+            <div class="col-md-1">
+                <form action="/post/<%= Post._id %>/comment" method="POST">
+                <div class="form-group">
+                    <input type="hidden" name="_method" value="DELETE" id="methodInput" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name="comment_Id" value= <%=cmt._id %> id="Comment_IdInput" />
+                </div>
+                <button type="submit" class="btn btn-danger">Xóa</button>
+                </form>
             </div>
-            <div class="form-group">
-                <input type="hidden" name="comment_Id" value= <%=cmt._id %> id="Comment_IdInput" />
-            </div>
-            <button type="submit" class="btn btn-danger">Xóa</button>
-            </form>
             <% } %>
             <% }) %>
-        </div>
     </div>
 <%- include ("../_partial/_footer.ejs"); %>

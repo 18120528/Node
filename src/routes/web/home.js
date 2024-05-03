@@ -33,7 +33,7 @@ router.get('/', async(req,res)=>
 });
 router.get('/about',async(req,res)=>
 {
-    res.status(200).send('18120528-Nguyen Nhu Quang');
+    res.status(200).render('home/about');
 });
 //Login
 router.get('/login',async(req,res)=>
