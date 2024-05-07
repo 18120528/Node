@@ -15,5 +15,6 @@ router.use((req,res,next)=>
 router.use('/',require('./home'));
 router.use('/post',require('./post'));
 router.use('/profile',require('./profile'));
+router.use('/dashboard',require('./dashboard'));
 //export this module
 module.exports=router;

@@ -10,7 +10,7 @@ const post = require("../../models/formPost");
 const Cmt = require("../../models/comment");
 const upload=require('../../middlewares/upload/uploadImage');
 const ifLoggin = require("../../middlewares/auth/authen");
-const ifAdmin = require("../../middlewares/auth/admin");
+const ifMod = require("../../middlewares/auth/mod");
 const ifAuthorized=require('../../middlewares/auth/author');
 // Set up middleware
 router.use(ifLoggin);
@@ -130,7 +130,7 @@ router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) =
     }
 });
 //comment
-router.post('/:postID/comment', ifAdmin, async (req, res) =>//Post comment 
+router.post('/:postID/comment', ifMod, async (req, res) =>//Post comment 
 {
         //Create a comment
         if(req.body._method=='POST')

@@ -19,7 +19,7 @@
                     <h5><%= Post.author %> at: <%= new Date(Post.createDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></h5>
                 </div>
             </div>
-            <% if(currentUser.role==='admin')
+            <% if(currentUser.role==='admin'||currentUser.role==='mod')
             { %>
             <div class="col-md-1">
                 <a href="/post/<%= Post._id %>/edit" class="btn btn-success" role="button">
