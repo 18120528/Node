@@ -33,17 +33,17 @@ router.get("/add", (req, res) => {
 //
 router.post("/add", upload.single('image'), async (req, res) => {
     try {
-        let img="";
+        let image="";
         if(req.file)
         {
-            img=req.file.path;
+            image=req.file.path;
         }
         const posted = await post.create({
             title: req.body.title,
             content: req.body.content,
             author: req.user.username,
             UserID: req.user._id,
-            image: img
+            image: image
         });
 
         if (posted) {
@@ -87,10 +87,10 @@ router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) =
     {
         try {
             let Post = await post.findById(req.params.postID);
-            let img=Post.image;
+            let image=Post.image;
             if(req.file)
             {
-                img=req.file.path;
+                image=req.file.path;
                 fs.unlink(Post.image, (err) => //local
                 {
                     if (err) {
@@ -98,7 +98,7 @@ router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) =
                     }
                 });                                                        
             }
-            await Post.updateOne({ title: req.body.title, content: req.body.content, image: img });
+            await Post.updateOne({ title: req.body.title, content: req.body.content, image: image });
             res.redirect("/post/" + req.params.postID);
         } catch (err) {
             if (err) {
