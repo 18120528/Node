@@ -12,76 +12,126 @@
         background: #dad7d1b6;
         overflow: hidden;
     }
+
+    /* New CSS for full-screen image container */
+    #fullScreenImageContainer {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 9999; /* Ensure it appears above other content */
+        text-align: center;
+    }
+
+    #fullScreenImage {
+        max-width: 80%;
+        max-height: 80%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 </style>
 
-    <div class="row">
-        <div class="col-sm-4 col-md-6">
-             <div class="thumbnail">
-                <a>
-                    <% if(Post.image) { %>
-                        <img src="<%= '/'+ Post.image %> " alt="img" />
-                    <% } else { %>
-                        <img src="https://i.ibb.co/RDjpxcw/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder-2-JA6-BFB.jpg"  alt="img" />
-                    <% } %>
-                </a>
-             </div>
-        </div>
-        <div class="col-md-6">
-            <h2><%= Post.title %></h2>
-        </div>
-        <div class="col-md-4">
-            <h3>Posted by: <a href="/profile/<%= Post.author %>"><%= Post.author %></a></h3>
+<div class="row">
+    <div class="col-sm-4 col-md-6">
+        <div class="thumbnail" id="thumbnail">
+            <a>
+                <% if(Post.image) { %>
+                    <img src="<%= '/'+ Post.image %> " alt="img" />
+                <% } else { %>
+                    <img src="https://i.ibb.co/RDjpxcw/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder-2-JA6-BFB.jpg"  alt="img" />
+                <% } %>
+            </a>
         </div>
     </div>
+    <div class="col-md-6">
+        <h2><%= Post.title %></h2>
+    </div>
+    <div class="col-md-4">
+        <h3>Posted by: <a href="/profile/<%= Post.author %>"><%= Post.author %></a></h3>
+    </div>
+</div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-body" style="background-color: #dad7d1b6;">
-                    <p style="font-size: 18px;"><%= Post.content %></p>
-                </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body" style="background-color: #dad7d1b6;">
+                <p style="font-size: 18px;"><%= Post.content %></p>
             </div>
-            <h6><%= Post.createDate %></h6>
         </div>
+        <h6><%= Post.createDate %></h6>
     </div>
+</div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Add a Comment</h3>
-            <form action="/post/<%= Post._id %>/comment" method="POST">
-                <div class="form-group">
-                    <input type="hidden" name="_method" value="POST" id="methodInput" />
-                </div>
-                <div class="form-group">
-                    <label for="content">Comment:</label>
-                    <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Đăng</button>
-            </form>
-        </div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Add a Comment</h3>
+        <form action="/post/<%= Post._id %>/comment" method="POST">
+            <div class="form-group">
+                <input type="hidden" name="_method" value="POST" id="methodInput" />
+            </div>
+            <div class="form-group">
+                <label for="content">Comment:</label>
+                <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Đăng</button>
+        </form>
     </div>
+</div>
 
-    <div class="row">
-            <% comments.forEach(cmt =>
-            { %>
-            <div class="col-md-11">
-                <h4 class="panel-body" style="background-color: #dad7d1b6;"><%= cmt.content %></h4>
-                <h6>By: <%= cmt.author %>, at: <%= new Date(cmt.createDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></h6>
-            </div>
-            <% if(currentUser.username==='admin')<!-- -->
-            { %>
-            <div class="col-md-1">
-                <form action="/post/<%= Post._id %>/comment" method="POST">
-                <div class="form-group">
-                    <input type="hidden" name="_method" value="DELETE" id="methodInput" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" name="comment_Id" value= <%=cmt._id %> id="Comment_IdInput" />
-                </div>
-                <button type="submit" class="btn btn-danger">Xóa</button>
-                </form>
-            </div>
-            <% } %>
-            <% }) %>
+<div class="row">
+    <% comments.forEach(cmt => { %>
+    <div class="col-md-11">
+        <h4 class="panel-body" style="background-color: #dad7d1b6;"><%= cmt.content %></h4>
+        <h6>By: <%= cmt.author %>, at: <%= new Date(cmt.createDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></h6>
     </div>
+    <% if(currentUser.username==='admin') { %>
+    <div class="col-md-1">
+        <form action="/post/<%= Post._id %>/comment" method="POST">
+            <div class="form-group">
+                <input type="hidden" name="_method" value="DELETE" id="methodInput" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="comment_Id" value= <%=cmt._id %> id="Comment_IdInput" />
+            </div>
+            <button type="submit" class="btn btn-danger">Xóa</button>
+        </form>
+    </div>
+    <% } %>
+    <% }) %>
+</div>
+
+<!-- Include _footer.ejs -->
 <%- include ("../_partial/_footer.ejs"); %>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const thumbnail = document.getElementById('thumbnail');
+    const fullScreenImageContainer = document.createElement('div');
+    fullScreenImageContainer.setAttribute('id', 'fullScreenImageContainer');
+    fullScreenImageContainer.innerHTML = `
+        <img id="fullScreenImage" src="" alt="Full Screen Image">
+    `;
+    fullScreenImageContainer.addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeFullScreenImage();
+        }
+    });
+    document.body.appendChild(fullScreenImageContainer);
+
+    thumbnail.addEventListener('click', function() {
+        const thumbnailImage = this.querySelector('img').getAttribute('src');
+        const fullScreenImage = document.getElementById('fullScreenImage');
+        fullScreenImage.setAttribute('src', thumbnailImage);
+        fullScreenImageContainer.style.display = 'flex';
+    });
+});
+
+function closeFullScreenImage() {
+    document.getElementById('fullScreenImageContainer').style.display = 'none';
+}
+</script>

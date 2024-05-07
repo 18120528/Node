@@ -22,14 +22,18 @@ setUpPassport();
 // Middleware
 app.use(cors());
 app.use(cookieParser());
-app.use(session({ // for authentication session
-    secret: "ronnnq18120528hcmus",//should be environment var
-    resave: false,//change only
-    saveUninitialized: false,//true if save personal like shopping cart
-    store: MongoStore.create({mongoUrl:uri}),
-    cookie: { 
-        // expires: new Date(new Date().setHours(23, 59, 59, 999)) // End of the current day
-        expires: new Date(Date.now() + (1 * 60 * 60 * 1000))
+app.use(session({
+    secret: process.env.SESSION_SECRET || "ronnnq18120528hcmus",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: uri,
+        ttl: 3600 // Set TTL to 1 hour (in seconds)
+    }),
+    cookie: {
+        maxAge: 3600000, // Expiration time for the session cookie (1 hour in milliseconds)
+        secure: false, // Adjust as needed
+        sameSite: 'strict' // Adjust as needed
     }
 }));
 app.use(passport.initialize());
