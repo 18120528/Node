@@ -20,7 +20,7 @@ router.get("/", (req, res) => {
 //Get user profile
 router.get('/:username',async (req,res)=>{
     let user= await users.findOne({username: req.params.username});
-    res.status(200).render("profile/myProfile",{user});
+    res.status(200).render("profile/profile-home",{user});
 })
 router.post('/:username', ifAuthorized, upload.single('image'), async (req,res)=>
 {

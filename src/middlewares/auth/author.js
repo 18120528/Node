@@ -22,7 +22,7 @@ async function ifAuthorized(req, res, next) {
         {
             const Post = await post.findById(req.params.postID);
             // Check if the user is the owner of the post
-            if (Post.UserID.equals(req.user._id)||req.user.role==='admin') 
+            if (Post.UserID.equals(req.user._id)||req.user.role==='admin'||req.user.role==='mod') 
             {
                 // User is authorized to edit the post, proceed to the next middleware or route handler
                 return next();

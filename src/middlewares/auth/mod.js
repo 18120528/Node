@@ -1,9 +1,9 @@
 'use strict';
 
 // Middleware function to check if the user is authorized to edit the post
-async function ifAmin(req, res, next) 
+async function ifMod(req, res, next) 
 {
-    if(req.user.role==='admin')
+    if(req.user.role==='mod'||req.user.role==='admin')
     {
         next();
     }
@@ -30,4 +30,4 @@ async function ifAmin(req, res, next)
     }
 }
 
-module.exports=ifAmin;
+module.exports=ifMod;

@@ -78,18 +78,23 @@
                 <label for="content">Comment:</label>
                 <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Đăng</button>
+            <div class="row">
+                <div class="col-md-11"></div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary">Đăng</button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
 
 <div class="row">
     <% comments.forEach(cmt => { %>
-    <div class="col-md-11">
+    <div class="col-md-11" style="border-top: 1px solid #b5b9bd; border-bottom: 1px solid #b5b9bd">
         <h4 class="panel-body" style="background-color: #dad7d1b6;"><%= cmt.content %></h4>
         <h6>By: <%= cmt.author %>, at: <%= new Date(cmt.createDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></h6>
     </div>
-    <% if(currentUser.role==='admin') { %>
+    <% if(currentUser.role==='admin'||currentUser.role==='mod') { %>
     <div class="col-md-1">
         <form action="/post/<%= Post._id %>/comment" method="POST">
             <div class="form-group">
