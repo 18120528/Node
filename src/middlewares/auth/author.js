@@ -5,10 +5,10 @@ const users = require("../../models/users");
 // Middleware function to check if the user is authorized to edit the post
 async function ifAuthorized(req, res, next) {
     try {
-        if(req.params.username)
+        if(req.params.username)//username for edit profile, postID for edit post
         {
             const user = await users.findOne({ username: req.params.username});
-            if(user._id.equals(req.user._id))
+            if(user._id.equals(req.user._id)||req.user.role==='admin')
             {
                 return next();
             }
@@ -22,7 +22,7 @@ async function ifAuthorized(req, res, next) {
         {
             const Post = await post.findById(req.params.postID);
             // Check if the user is the owner of the post
-            if (Post.UserID.equals(req.user._id)) 
+            if (Post.UserID.equals(req.user._id)||req.user.role==='admin') 
             {
                 // User is authorized to edit the post, proceed to the next middleware or route handler
                 return next();

@@ -1,24 +1,28 @@
 <%- include ("../_partial/_header.ejs"); %>
 
 <div class="row">
+    <div class="col-md-8">
+        <p><strong><%= user.username %></strong></p>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-4">
-        <div class="row-md-6">
-            <div class="thumbnail" id="thumbnail" style="height: 300px; ">
-                <a>
-                    <img id="profileImage" src="<% if(user.image) { %><%= '/' + user.image %><% } else { %>https://i.ibb.co/RDjpxcw/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder-2-JA6-BFB.jpg<% } %>" alt="Profile Image" style="width: 100%; height: 100%;" />
-                </a>
-            </div>
+        <div class="thumbnail" id="thumbnail" style="height: 310px; ">
+            <a>
+                <img id="profileImage" src="<% if(user.image) { %><%= '/' + user.image %><% } else { %>https://i.ibb.co/RDjpxcw/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder-2-JA6-BFB.jpg<% } %>" alt="Profile Image" style="width: 100%; height: 100%;" />
+            </a>
         </div>
     </div>
     <div class="col-md-8">
         <p><strong>Email:</strong> <%= user.email %></p>
         <p><strong>Joined:</strong> <%= new Date(user.createdAt).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+        <p><strong>Role:</strong> <%= user.role %></p>
         <form action="/profile/<%=user.username %>" method="POST" enctype="multipart/form-data" >
             <div class="form-group">
                 <label for="bioInput">About me:</label>
-                <textarea class="form-control" id="bioInput" name="bio" rows="10" style="resize: none;"><%= user.bio %></textarea>
+                <textarea class="form-control" id="bioInput" name="bio" rows="9" style="resize: none;"><%= user.bio %></textarea>
             </div>
-            <% if(user.username===currentUser.username) { %>
+            <% if(user.username===currentUser.username||currentUser.role==='admin') { %>
             <div class="form-group">
                 <input type="file" name="image" accept="image/*" onchange="previewImage(event)"/>
             </div>

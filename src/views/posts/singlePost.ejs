@@ -89,7 +89,7 @@
         <h4 class="panel-body" style="background-color: #dad7d1b6;"><%= cmt.content %></h4>
         <h6>By: <%= cmt.author %>, at: <%= new Date(cmt.createDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></h6>
     </div>
-    <% if(currentUser.username==='admin') { %>
+    <% if(currentUser.role==='admin') { %>
     <div class="col-md-1">
         <form action="/post/<%= Post._id %>/comment" method="POST">
             <div class="form-group">
