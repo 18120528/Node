@@ -38,8 +38,8 @@ router.post('/:username', ifAuthorized, upload.single('image'), async (req,res)=
                 }
             });  
         }
-        await users.updateOne({ username: req.params.username }, { $set: { bio: req.body.bio, image: image } });
-        res.redirect("/profile/");
+        await users.updateOne({ username: req.params.username }, { $set: { bio: req.body.bio, image: image } });//if  1 element=undefined=>not update
+        res.redirect("/profile/"+req.params.username);
     } catch (err) 
     {
         if (err) 

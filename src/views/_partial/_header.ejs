@@ -33,6 +33,11 @@
         <ul class="nav navbar-nav navbar-right">
             <li><a href="/about">About</a></li>
             <% if(currentUser != null) { %>
+                <% if(currentUser.role==='admin')
+                { %>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <% } %>
+                <li><a href="/profile">Profile</a></li>
                 <li><a href="/post">Post</a></li>
                 <li><a href="#">Welcome <%= currentUser.username %></a></li>
                 <li><a href="/logout">Logout</a></li>

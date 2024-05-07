@@ -11,8 +11,9 @@ var userSchema = new mongoose.Schema(
     email:{type:String, required:true, unique:true},
     password:{type:String, required:true},
     createdAt:{type:Date, default:Date.now},
-    image: {type: String, required: false},
-    bio: {type: String, required: false}
+    image: {type: String, default: "", required: false},
+    bio: {type: String, required: false},
+    role: {type: String, default: "member"}
 });
 //pre-post-method()-methods.    
 userSchema.pre("save", async function(next) 

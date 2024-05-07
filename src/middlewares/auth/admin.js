@@ -5,7 +5,7 @@ const post = require("../../models/formPost");
 // Middleware function to check if the user is authorized to edit the post
 async function ifAmin(req, res, next) 
 {
-    if(req.user.username==='admin')
+    if(req.user.role==='admin'||req.user.role==='mod')
     {
         next();
     }
