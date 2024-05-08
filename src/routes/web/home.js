@@ -136,7 +136,7 @@ router.post('/forgetpwd', async (req, res)=>
     if(user)
     {
         let newpassword=crypto.pseudoRandomBytes(5).toString('hex');console.log(newpassword);
-        //await User.updateOne({username: user.username}, {password: newpassword});
+        await User.updateOne({username: user.username}, {password: newpassword});
         let subject="Quang-Reset Password";
         let content={
             password: `${newpassword}`
