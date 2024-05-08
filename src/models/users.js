@@ -33,7 +33,22 @@ userSchema.pre("save", async function(next)
         return next(error);
     }
 });
-
+userSchema.pre("updateOne", async function(next) {
+    try {
+        const update = this.getUpdate();
+        const password = update.password;
+        if (!password) {
+            return next();
+        }
+        const salt = await bcrypt.genSalt(SALT_FACTOR);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        update.password = hashedPassword;
+        return next();
+    } catch (error) {
+        return next(error);
+    }
+});
+//
 userSchema.methods.checkPass=function(reqPass,done)
 {
     if(!this.password) {return done(err);}

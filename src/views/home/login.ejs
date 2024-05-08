@@ -1,12 +1,18 @@
 <%- include('../_partial/_header'); -%>
 
 <div style="width: 300px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; text-align: center;">
-  <h2>Login Form</h2>
+  <strong><h2>Login Form</h2></strong>
   <form action="login" method="post" onsubmit="return validateForm()">
     <input type="text" id="username" name="username" placeholder="Username" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
     <input type="password" id="password" name="password" placeholder="Password" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
     <input type="submit" value="Login" style="width: 100%; padding: 10px; margin-top: 10px; box-sizing: border-box; border: none; border-radius: 3px; background-color: #007bff; color: #fff; cursor: pointer;">
   </form>
+  <div class="col" style="padding-bottom: 10px; padding-top: 10px;">
+    <a href="/changepwd">Change Password</a>
+  </div>
+  <div class="col">
+    <a href="/forgetpwd">Forget Password?</a>
+  </div>
 </div>
 
 <script>

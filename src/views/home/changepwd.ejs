@@ -1,0 +1,48 @@
+<%- include('../_partial/_header'); -%>
+
+<div style="width: 300px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; text-align: center;">
+  <strong><h3>Change Your Password</h3></strong>
+  <form action="changepwd" method="post" onsubmit="return validateForm()">
+    <input type="text" id="username" name="username" placeholder="Username" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
+    <input type="password" id="old_password" name="old_password" placeholder="Old Password" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
+    <input type="password" id="new_password" name="new_password" placeholder="New Password" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
+    <input type="password" id="re_new_password" name="re_new_password" placeholder="Re-enter New Password" style="width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px;"><br>
+    <input type="submit" value="Submit" style="width: 100%; padding: 10px; margin-top: 10px; box-sizing: border-box; border: none; border-radius: 3px; background-color: #007bff; color: #fff; cursor: pointer;">
+  </form>
+  <div class="col">
+    <a href="/forgetpwd">Forget Password?</a>
+  </div>
+</div>
+
+<script>
+  function validateForm() {
+    var username = document.getElementById("username").value;
+    var oldPassword = document.getElementById("old_password").value;
+    var newPassword = document.getElementById("new_password").value;
+    var re_enter_NewPassword = document.getElementById("re_new_password").value;
+
+    if (username === "") {
+      alert("Username cannot be blank");
+      return false;
+    }
+    if (oldPassword === "") {
+      alert("Old Password cannot be blank");
+      return false;
+    }
+    if (newPassword === "") {
+      alert("New Password cannot be blank");
+      return false;
+    }
+    if (re_enter_NewPassword === "") {
+      alert("Re-enter New Password cannot be blank");
+      return false;
+    }
+    if (newPassword !== re_enter_NewPassword) {
+      alert("New Password and Re-enter New Password do not match");
+      return false;
+    }
+    return true;
+  }
+</script>
+
+<%- include('../_partial/_footer'); -%>

@@ -4,7 +4,6 @@
 const express = require('express');
 const router = express.Router();
 const fs=require('fs');
-const path = require('path');
 //custom middleware
 const post = require("../../models/formPost");
 const Cmt = require("../../models/comment");

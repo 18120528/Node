@@ -14,6 +14,7 @@ const session = require("express-session");
 const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const cors = require("cors");
+const favicon = require('serve-favicon');
 // Connect to the database
 const app = express();
 mongoose.connect(uri);
@@ -50,6 +51,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 // Define your routes
 app.use('/src/upload/images', express.static(path.join(__dirname, '/upload/images')));
+app.use(favicon(path.join(__dirname, '/upload/resource/favicon.ico')));
 app.use('/', require('./routes/web/index'));
 app.use('/api', require('./routes/api/index'));
 

@@ -2,13 +2,15 @@
 //import modules
 const express=require('express');
 const router=express.Router();
-const fs=require('fs').promises;
 var passport = require("passport");
+const crypto = require('crypto');
 //
 const post = require("../../models/formPost");
 const User=require('../../models/users');
 const Session=require('../../models/activeSession');
-//
+//Controller
+const sendEmail=require('../../controllers/sendEmail');
+//Homepage
 router.get('/', async(req,res)=>
 {
     if(req.session.passport)
@@ -85,5 +87,70 @@ router.post('/signup', async (req, res) => {
         res.status(500).send('Timeout error occurred. Please try again later.');
     }
 });
+//Get changepwd page
+router.get('/changepwd', (req, res)=>
+{
+    res.status(200).render('home/changepwd');
+});
+//Change Password
+router.post('/changepwd', async(req, res)=>
+{
+    let user=await User.findOne({username: req.body.username});
+    if(user)
+    {
+      await user.checkPass(req.body.old_password, async (err,isMatch)=>
+      {
+        if(err)
+        {
+            req.flash("error", err);
+            res.redirect('/changepwd');
+        }
+        if(isMatch) 
+        {
+            await User.updateOne({username: req.body.username}, {password: req.body.new_password});
+            req.flash("info", "Success");
+            res.redirect('/login');
+        }
+        else 
+        {
+            req.flash("error", "The old password does not match!");
+            res.redirect('/changepwd');
+        }
+      });
+    }
+    else
+    {
+        req.flash("error", "The Username Do Not Existed!");
+        res.redirect('/changepwd');
+    }
+});
+//Get forgetpwd page
+router.get('/forgetpwd', (req, res)=>
+{
+    res.status(200).render('home/forgetpwd');
+});
+//Get new password
+router.post('/forgetpwd', async (req, res)=>
+{
+    let user=await User.findOne({email: req.body.email});
+    if(user)
+    {
+        let newpassword=crypto.pseudoRandomBytes(5).toString('hex');console.log(newpassword);
+        //await User.updateOne({username: user.username}, {password: newpassword});
+        let subject="Quang-Reset Password";
+        let content={
+            password: `${newpassword}`
+        };
+        sendEmail(user.email, subject, content);
+        req.flash("info", "Check your email");
+        res.redirect('/login');
+    }
+    else
+    {
+        req.flash("error", "The Account does not exist!!!");
+        res.redirect('/forgetpwd');
+    }
+});
+
 //export this module
 module.exports=router;

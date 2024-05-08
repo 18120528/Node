@@ -14,9 +14,23 @@
         </div>
     </div>
     <div class="col-md-8">
+        <% if (currentUser.role === 'admin'||currentUser.username===user.username) { %>
         <p><strong>Email:</strong> <%= user.email %></p>
+        <% } else {
+        var atIndex = user.email.indexOf('@'); %>
+        <p><strong>Email:</strong> <%= '*'.repeat(atIndex) + user.email.substring(atIndex) %></p>
+        <% } %>          
         <p><strong>Joined:</strong> <%= new Date(user.createdAt).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></p>
-        <p><strong>Role:</strong> <%= user.role %></p>
+        <strong><p>Role:
+            <% if (user.role === 'admin') { %>
+                <span style="color: rgb(199, 30, 58);">Adminstrator</span>
+            <% } else if (user.role === 'mod') { %>
+                <span style="color: green;">Moderator</span>
+            <% } else { %>
+                <span style="color: blue;">Member</span>
+            <% } %>
+        </p>
+        </strong>
         <form action="/profile/<%=user.username %>" method="POST" enctype="multipart/form-data" >
             <div class="form-group">
                 <label for="bioInput">About me:</label>

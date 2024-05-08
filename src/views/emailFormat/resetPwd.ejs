@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .container {
+            width: 80%;
+            margin: auto;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .body {
+            margin-bottom: 20px;
+        }
+        .password {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .signature {
+            margin-top: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Password Reset</h1>
+        </div>
+        <div class="body">
+            <p>Dear User,</p>
+            <p>We received a request to reset your password. Please find your new password below:</p>
+            <div class="password">
+                <strong><%= content.password %></strong>
+            </div>
+            <p>Please login with your new password and change it to a more secure one as soon as possible.</p>
+            <p>Thank you.</p>
+        </div>
+        <div class="signature">
+            <p>Sincerely,</p>
+            <p>Quang</p>
+        </div>
+    </div>
+</body>
+</html>
