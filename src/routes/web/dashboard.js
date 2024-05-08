@@ -4,7 +4,6 @@
 const express = require('express');
 const router = express.Router();
 const fs=require('fs');
-const path = require('path');
 //custom middleware
 const user = require("../../models/users");
 const upload=require('../../middlewares/upload/uploadImage');
@@ -24,7 +23,7 @@ router.post("/role", ifAdmin, async(req,res)=> {
     let roles=req.body.role;
     await usernames.forEach(async (username, index)=>
     {
-        await user.findOneAndUpdate({username: username}, {role: roles[index]});
+        await user.updateOne({username: username}, {role: roles[index]});
     });
     res.status(200).redirect("/dashboard");
 });

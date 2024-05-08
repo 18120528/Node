@@ -17,7 +17,7 @@
         <% users.forEach(user => { %>
             <div class="row" style="border-top: 1px solid #b5b9bd; border-bottom: 1px solid #b5b9bd">
                 <div class="col-md-10">
-                    <a href="/profile/<%= user.username %>"><h3><%= user.username %></h3></a>
+                    <a href="/profile/<%= user.username %>"><h4><%= user.username %></h4></a>
                 </div>
                 <div class="col-md-2">
                     <input type="hidden" name="username" value="<%= user.username %>">

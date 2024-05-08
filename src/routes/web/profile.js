@@ -4,12 +4,10 @@
 const express = require('express');
 const router = express.Router();
 const fs=require('fs');
-const path = require('path');
 //custom middleware
 const users = require("../../models/users");
 const upload=require('../../middlewares/upload/uploadImage');
 const ifLoggin = require("../../middlewares/auth/authen");
-const ifAdmin = require("../../middlewares/auth/admin");
 const ifAuthorized=require('../../middlewares/auth/author');
 // Set up middleware
 router.use(ifLoggin);
