@@ -12,7 +12,7 @@
 /build
 
 #Resource
-src/upload/
+src/upload/images
 
 # misc
 .DS_Store
