@@ -1,19 +1,31 @@
 <%- include ("../_partial/_header.ejs"); %>
-
+<style>
+    .btn-secondary {
+        color: #fff;
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+</style>
 <div class="row">
-    <div class="col-md-8">
-        <p><strong><%= user.username %></strong></p>
+    <div class="col-md-11">
+        <p><strong><%= user.username %>'s Profile</strong></p>
     </div>
+    <% if(user.username===currentUser.username||currentUser.role==='admin') { %>
+    <div class="col-md-1">
+        <a href="/profile/<%= user.username%>/setting" class="btn btn-secondary">Setting</a>
+    </div>
+    <% } %>
 </div>
 <div class="row">
     <div class="col-md-4">
-        <div class="thumbnail" id="thumbnail" style="height: 310px; ">
+        <div class="thumbnail" id="thumbnail" style="height: 320px; ">
             <a>
                 <img id="profileImage" src="<% if(user.image) { %><%= '/' + user.image %><% } else { %>https://i.ibb.co/RDjpxcw/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment-placeholder-2-JA6-BFB.jpg<% } %>" alt="Profile Image" style="width: 100%; height: 100%;" />
             </a>
         </div>
     </div>
     <div class="col-md-8">
+        <p><strong>Username:</strong> <%= user.username %></p>
         <% if (currentUser.role === 'admin'||currentUser.username===user.username) { %>
         <p><strong>Email:</strong> <%= user.email %></p>
         <% } else {
@@ -34,7 +46,7 @@
         <form action="/profile/<%=user.username %>" method="POST" enctype="multipart/form-data" >
             <div class="form-group">
                 <label for="bioInput">About me:</label>
-                <textarea class="form-control" id="bioInput" name="bio" rows="9" style="resize: none;"><%= user.bio %></textarea>
+                <textarea class="form-control" id="bioInput" name="bio" rows="8" style="resize: none;"><%= user.bio %></textarea>
             </div>
     </div>
 </div>

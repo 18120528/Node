@@ -40,7 +40,14 @@ router.get('/about',async(req,res)=>
 //Login
 router.get('/login',async(req,res)=>
 {
-    res.status(200).render('home/login');
+    if(req.user)
+    {
+        res.redirect('/');
+    }
+    else
+    {
+        res.status(200).render('home/login');
+    }
 });
 router.post('/login',passport.authenticate('login',
 {
@@ -51,18 +58,32 @@ router.post('/login',passport.authenticate('login',
 //Log Out
 router.get('/logout',async (req,res,next)=>
 {
-    await Session.findOneAndDelete({ userID: req.user.id, sessionID: req.sessionID });
-    req.logOut((err)=>
+    if(req.user)
     {
-        if(err){return next(err);}
-        req.session.destroy();
+        await Session.findOneAndDelete({ userID: req.user.id, sessionID: req.sessionID });
+        req.logOut((err)=>
+        {
+            if(err){return next(err);}
+            req.session.destroy();
+            res.redirect('/');
+        });
+    }
+    else
+    {
         res.redirect('/');
-    });
-})
+    }
+});
 //Sign Up
 router.get('/signup', async (req,res)=>
 {
-    res.status(200).render('home/signup');
+    if(req.user)
+    {
+        res.redirect('/');
+    }
+    else
+    {
+        res.status(200).render('home/signup');
+    }
 });
 router.post('/signup', async (req, res) => {
     try {
@@ -127,7 +148,14 @@ router.post('/changepwd', async(req, res)=>
 //Get forgetpwd page
 router.get('/forgetpwd', (req, res)=>
 {
-    res.status(200).render('home/forgetpwd');
+    if(req.user)
+    {
+        res.redirect('/');
+    }
+    else
+    {
+        res.status(200).render('home/forgetpwd');
+    }
 });
 //Get new password
 router.post('/forgetpwd', async (req, res)=>

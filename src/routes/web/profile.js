@@ -9,16 +9,29 @@ const users = require("../../models/users");
 const upload=require('../../middlewares/upload/uploadImage');
 const ifLoggin = require("../../middlewares/auth/authen");
 const ifAuthorized=require('../../middlewares/auth/author');
+const User = require('../../models/users');
 // Set up middleware
 router.use(ifLoggin);
 //Default routing 
 router.get("/", (req, res) => {
+    if(res.locals.error[0]==='The user does not exist!!!')
+    {
+        req.flash("error", 'The user does not exist!!!');
+    }
     res.redirect(`/profile/${req.user.username}`);
 });
 //Get user profile
 router.get('/:username',async (req,res)=>{
     let user= await users.findOne({username: req.params.username});
-    res.status(200).render("profile/profile-home",{user});
+    if(user)
+    {
+        res.status(200).render("profile/profile-home",{user});
+    }
+    else
+    {
+        req.flash("error", 'The user does not exist!!!');
+        res.redirect("/profile/");
+    }
 })
 router.post('/:username', ifAuthorized, upload.single('image'), async (req,res)=>
 {
@@ -47,5 +60,18 @@ router.post('/:username', ifAuthorized, upload.single('image'), async (req,res)=
         }
     }
 });
+//personal setting page
+router.get('/:username/setting', ifAuthorized, async(req, res)=>
+{
+    let user= await users.findOne({username: req.params.username});
+    res.status(200).render("profile/profile-setting",{user});
+});
+//Make setting change
+router.post('/:username/setting', ifAuthorized, async(req,res)=>
+{
+    await User.findOneAndUpdate({username: req.params.username}, {email: req.body.email});
+    res.redirect(`/profile/${req.params.username}/setting`);
+});
+
 // Export this module //TODO ROLES
 module.exports = router;
