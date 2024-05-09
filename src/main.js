@@ -29,10 +29,10 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: uri,
-        ttl: 3600 // Set TTL to 1 hour (in seconds)
+        ttl: 7200 // Set TTL to 1 hour (in seconds)
     }),
     cookie: {
-        maxAge: 3600000, // Expiration time for the session cookie (1 hour in milliseconds)
+        maxAge: 7200000, // Expiration time for the session cookie (1 hour in milliseconds)
         secure: false, // Adjust as needed
         sameSite: 'strict' // Adjust as needed
     }

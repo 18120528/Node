@@ -24,14 +24,14 @@
                     <% if(user.role==='admin')
                     { %>
                     <select name="role">
-                        <option value="admin">Admin&nbsp;&nbsp;&nbsp;</option>
+                        <option value="admin">Admin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
                     </select>
                     <% }
                     else
                     { %>
                     <select name="role">
                         <option value="member" <%= user.role==='member' ? 'selected' : '' %>>Member</option>
-                        <option value="mod" <%= user.role==='mod' ? 'selected' : '' %>>Mod</option>
+                        <option value="mod" <%= user.role==='mod' ? 'selected' : '' %>>Moderator</option>
                     </select>
                     <% } %>                
                 </div>
