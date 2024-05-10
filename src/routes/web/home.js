@@ -126,7 +126,7 @@ router.get('/accountactive/:code', async(req, res)=>
         account.userID.active=true;
         await account.userID.save();
         await confirmCode.findOneAndDelete({code: req.params.code});
-        res.status(200).send('Your Account has been Activated!!!');
+        res.status(200).send('Your Account has been Activated!');
     }
     else
     {

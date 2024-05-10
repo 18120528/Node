@@ -29,12 +29,12 @@ module.exports=function()
   },async (username, password, done)=>
   {
     let user=await User.findOne({username: username});
-    if(user.active!=true)
-    {
-      return done(null,false,{message: "Not Active or Banned!!!"});
-    }
     if(user)
     {
+      if(user.active!=true)
+      {
+        return done(null,false,{message: "Not Active or Banned!!!"});
+      }
       user.checkPass(password,(err,isMatch)=>
       {
         if(err){return done(err);}
