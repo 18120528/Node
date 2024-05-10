@@ -4,8 +4,10 @@ const fs = require('fs');
 const ejs = require('ejs');
 const nodemailer = require('nodemailer');
 const path=require('path');
-
-const sendEmail = (email, subject, content) => 
+//
+const mailOptions={resetPwd: 'resetPwd.ejs', emailConfirm: 'emailConfirm.ejs'};
+//
+const sendEmail = (content, option) => 
 {
     // Create a transporter
     const transporter = nodemailer.createTransport({
@@ -16,7 +18,7 @@ const sendEmail = (email, subject, content) =>
         }
     });
     // Load the template file
-    fs.readFile(path.join(__dirname, '..','/views/emailFormat/resetPwd.ejs'), 'utf8', (err, template) => 
+    fs.readFile(path.join(__dirname, '..','/views/emailFormat/',option), 'utf8', (err, template) => 
     {
         if (err) 
         {
@@ -29,8 +31,8 @@ const sendEmail = (email, subject, content) =>
         // Define email options
         const mailOptions = {
             from: 'taotenron284@gmail.com',
-            to: email,
-            subject: subject,
+            to: content.email,
+            subject: content.subject,
             html: html,
             contentType: 'text/html' // Set content type to HTML
         };
@@ -46,4 +48,4 @@ const sendEmail = (email, subject, content) =>
     });
 };
 
-module.exports = sendEmail;
+module.exports = {sendEmail, mailOptions};

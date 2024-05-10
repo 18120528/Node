@@ -8,7 +8,7 @@
 </style>
 <div class="row">
     <div class="col-md-11">
-        <p><strong><%= user.username %>'s Profile</strong></p>
+        <p style="font-size: 2.5em; font-weight: bold;"><%= user.username %>'s Profile</p>
     </div>
     <% if(user.username===currentUser.username||currentUser.role==='admin') { %>
     <div class="col-md-1">

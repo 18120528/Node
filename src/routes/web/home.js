@@ -8,8 +8,9 @@ const crypto = require('crypto');
 const post = require("../../models/formPost");
 const User=require('../../models/users');
 const Session=require('../../models/activeSession');
+const confirmCode=require('../../models/confirmCode');
 //Controller
-const sendEmail=require('../../controllers/sendEmail');
+const {sendEmail, mailOptions}=require('../../controllers/sendEmail');
 //Homepage
 router.get('/', async(req,res)=>
 {
@@ -87,18 +88,26 @@ router.get('/signup', async (req,res)=>
 });
 router.post('/signup', async (req, res) => {
     try {
-        var body = req.body;
-        const exist = await User.find({ $or: [{ username: body.username }, { email: body.email }] });
-        console.log(exist.length);
-        if (exist.length>0) 
+        let exist = await User.findOne({ $or: [{ username: req.body.username }, { email: req.body.email }] });
+        if (exist) 
         {
             req.flash("error", "User or Email Already Existed!!!");
             res.redirect('/signup');
         } 
         else 
         {
-            User.create(body);
-            req.flash("info", "Sign Up Success!!!");
+            let user=await User.create(req.body);
+            let code=crypto.pseudoRandomBytes(64).toString('hex');
+            await confirmCode.create({code: code, userID: user._id});
+            let option=mailOptions.emailConfirm;
+            let content={
+                email: req.body.email,
+                subject: 'Quang-Account acctivate',
+                username: req.body.username,
+                code: code
+            }
+            sendEmail(content, option);
+            req.flash("info", "Sign Up Success, check your linked email to activate the account!");
             res.redirect('/login');
         }
     } catch (err) 
@@ -108,6 +117,23 @@ router.post('/signup', async (req, res) => {
         res.status(500).send('Timeout error occurred. Please try again later.');
     }
 });
+//Active Account
+router.get('/accountactive/:code', async(req, res)=>
+{
+    let account=await confirmCode.findOne({code: req.params.code}).populate({path: 'userID'});
+    if(account)
+    {
+        account.userID.active=true;
+        await account.userID.save();
+        await confirmCode.findOneAndDelete({code: req.params.code});
+        res.status(200).send('Your Account has been Activated!!!');
+    }
+    else
+    {
+        res.status(404).send('The Activation Code is Expired or Wrong!!!');
+    }
+});
+
 //Get changepwd page
 router.get('/changepwd', (req, res)=>
 {
@@ -163,13 +189,16 @@ router.post('/forgetpwd', async (req, res)=>
     let user=await User.findOne({email: req.body.email});
     if(user)
     {
-        let newpassword=crypto.pseudoRandomBytes(5).toString('hex');console.log(newpassword);
+        let newpassword=crypto.pseudoRandomBytes(5).toString('hex');
         await User.updateOne({username: user.username}, {password: newpassword});
-        let subject="Quang-Reset Password";
         let content={
-            password: `${newpassword}`
+            username: user.username,
+            password: `${newpassword}`,
+            email: user.email,
+            subject: "Quang-Reset Password"
         };
-        sendEmail(user.email, subject, content);
+        let option=mailOptions.resetPwd;
+        sendEmail(content, option);
         req.flash("info", "Check your email");
         res.redirect('/login');
     }
