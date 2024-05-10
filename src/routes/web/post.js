@@ -7,6 +7,7 @@ const fs=require('fs');
 //custom middleware
 const post = require("../../models/formPost");
 const Cmt = require("../../models/comment");
+const User = require("../../models/users");
 const upload=require('../../middlewares/upload/uploadImage');
 const ifLoggin = require("../../middlewares/auth/authen");
 const ifMod = require("../../middlewares/auth/mod");
@@ -45,7 +46,14 @@ router.post("/add", upload.single('image'), async (req, res) => {
             image: image
         });
 
-        if (posted) {
+        if (posted) 
+        {
+            //Save to Log
+            let user=await User.findOne({username: req.user.username}).populate({path: 'personalID'});
+            let currentDate = new Date();
+            let content = `Created post: ${posted._id} at ${currentDate.getHours()}:${currentDate.getMinutes()}, ${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
+            user.personalID.log.push(content);
+            user.personalID.save();
             req.flash("info", "Success!");
             res.redirect("/post");
         }
@@ -98,6 +106,12 @@ router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) =
                 });                                                        
             }
             await Post.updateOne({ title: req.body.title, content: req.body.content, image: image });
+            //Save to Log
+            let user=await User.findOne({username: req.user.username}).populate({path: 'personalID'});
+            let currentDate = new Date();
+            let content = `Updated post: ${Post._id} at ${currentDate.getHours()}:${currentDate.getMinutes()}, ${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
+            user.personalID.log.push(content);
+            user.personalID.save();
             res.redirect("/post/" + req.params.postID);
         } catch (err) {
             if (err) {
@@ -119,6 +133,12 @@ router.post('/:postID', ifAuthorized, upload.single('image') ,async (req, res) =
             });
             await Cmt.findByIdAndDelete(Post.comments);
             await post.findByIdAndDelete(req.params.postID);//db
+            //Save to Log
+            let user=await User.findOne({username: req.user.username}).populate({path: 'personalID'});
+            let currentDate = new Date();
+            let content = `Deleted a post at ${currentDate.getHours()}:${currentDate.getMinutes()}, ${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
+            user.personalID.log.push(content);
+            user.personalID.save();
             res.redirect("/post/");
         } catch (err) {
             if (err) {
@@ -144,6 +164,12 @@ router.post('/:postID/comment', ifMod, async (req, res) =>//Post comment
                     req.params.postID,
                     { $push: { comments: comment._id }
                 });
+                //Save to Log
+                let user=await User.findOne({username: req.user.username}).populate({path: 'personalID'});
+                let currentDate = new Date();
+                let content = `Commented at post: ${req.params.postID} at ${currentDate.getHours()}:${currentDate.getMinutes()}, ${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
+                user.personalID.log.push(content);
+                user.personalID.save();
                 res.redirect("/post/" + req.params.postID);
             } catch (err) 
             {
@@ -163,6 +189,12 @@ router.post('/:postID/comment', ifMod, async (req, res) =>//Post comment
                     req.params.postID,
                     { $pull: { comments: comment_Id } });
                 await Cmt.findByIdAndDelete(comment_Id);
+                //Save to Log
+                let user=await User.findOne({username: req.user.username}).populate({path: 'personalID'});
+                let currentDate = new Date();
+                let content = `Deleted a comment at post: ${req.params.postID} at ${currentDate.getHours()}:${currentDate.getMinutes()}, ${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
+                user.personalID.log.push(content);
+                user.personalID.save();
                 res.redirect("/post/" + req.params.postID);
             } catch (err)
             {

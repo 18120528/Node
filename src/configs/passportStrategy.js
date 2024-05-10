@@ -14,7 +14,7 @@ module.exports=function()
   {
     try 
     {
-      const user = await User.findById(id);
+      const user = await User.findById(id).populate({path: 'personalID'});
       done(null, user); // Pass null for error and user object for user
     } catch (err) 
     {

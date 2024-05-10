@@ -4,26 +4,65 @@
     <title>User Page</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <% if(currentUser){ %>
+    <% if(currentUser.personalID.darkMode){ %>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #15191d;
+            background-color: #15191d; 
             display: flex;
             flex-direction: column;
             min-height: 100vh; /* Ensure body takes up at least the height of the viewport */
         }
-        
         .navbar {
-            background-color: #f8f9fa; /* Change navbar background color */
+            background-color: #e7e5e5; /* Change navbar background color */
         }
-        
+        .container-main {
+            flex-grow: 1; /* Allow container to grow to fill available vertical space */
+            background-color: #9da3a5; /* Change main container background color */
+            padding: 20px; /* Add padding as needed */
+        }
+    </style>
+    <% }else{ %>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #2769ab;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes up at least the height of the viewport */
+        }
+        .navbar {
+            background-color: #e7e5e5; /* Change navbar background color */
+        }
         .container-main {
             flex-grow: 1; /* Allow container to grow to fill available vertical space */
             background-color: #cfd1d3; /* Change main container background color */
             padding: 20px; /* Add padding as needed */
         }
     </style>
+    <% }}else{ %>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #2769ab;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes up at least the height of the viewport */
+        }
+        .navbar {
+            background-color: #e7e5e5; /* Change navbar background color */
+        }
+        .container-main {
+            flex-grow: 1; /* Allow container to grow to fill available vertical space */
+            background-color: #cfd1d3; /* Change main container background color */
+            padding: 20px; /* Add padding as needed */
+        }
+    </style>
+    <% } %>
 </head>
 <body>
 <div class="navbar navbar-default navbar-static-top" role="navigation">

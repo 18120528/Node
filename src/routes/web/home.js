@@ -9,6 +9,7 @@ const post = require("../../models/formPost");
 const User=require('../../models/users');
 const Session=require('../../models/activeSession');
 const confirmCode=require('../../models/confirmCode');
+const personals=require('../../models/personal');
 //Controller
 const {sendEmail, mailOptions}=require('../../controllers/sendEmail');
 //Homepage
@@ -96,7 +97,13 @@ router.post('/signup', async (req, res) => {
         } 
         else 
         {
-            let user=await User.create(req.body);
+            let personal=await personals.create({});
+            let user=await User.create({
+                username: req.body.username,
+                password: req.body.password,
+                email: req.body.email,
+                personalID: personal._id
+            });
             let code=crypto.pseudoRandomBytes(64).toString('hex');
             await confirmCode.create({code: code, userID: user._id});
             let option=mailOptions.emailConfirm;

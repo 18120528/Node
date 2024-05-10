@@ -1,6 +1,6 @@
 'use strict'
-var bcrypt = require("bcryptjs");
-var mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const mongoose = require("mongoose");
 
 //
 const SALT_FACTOR = 10;
@@ -14,7 +14,8 @@ var userSchema = new mongoose.Schema(
     image: {type: String, default: "", required: false},
     bio: {type: String, required: false},
     role: {type: String, default: "member"},
-    active: {type: Boolean, default: false}
+    active: {type: Boolean, default: false},
+    personalID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'personals' }
 });
 //pre-post-method()-methods.    
 userSchema.pre("save", async function(next) 

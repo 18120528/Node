@@ -1,0 +1,12 @@
+<%- include ("../_partial/_header.ejs"); %>
+    <div class="row">
+        <div class="col-md-6">
+            <h1 style="font-size: 2.5em; font-weight: bold;"><%=user.username%>'s activities:</h1>
+        </div>
+    </div>
+    <% user.personalID.log.reverse().forEach( log=>{%>
+        <div class="row" style="text-align: center;">
+            <p><%=log%></p>
+        </div>
+    <%})%>
+<%- include ("../_partial/_footer.ejs"); %>
