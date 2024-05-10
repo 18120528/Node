@@ -5,48 +5,61 @@
         <h1 style="font-size: 2.5em; font-weight: bold;">Setting</h1>
     </div>
 </div>
-<div class="row">
-    <form id="changeEmailForm">
-        <div class="col-md-4"> <!-- Adjusted column size -->
-            <div class="form-group">
-                <label for="email" style="padding-right: 55px;">Email:</label>
-                <input type="email" id="email" name="email" value="<%= user.email %>">
-            </div>
-        </div>
-        <div class="col-md-6"> <!-- Adjusted column size -->
-            <div class="form-group">
-                <button type="button" id="changeButton" class="btn btn-primary">Change</button>
-            </div>
-        </div>
-    </form>
+
+<div class="row" style="padding-bottom: 20px;">
+    <div class="col-md-3"></div>
+    <div class="col-md-2"> <!-- Adjusted column size -->
+        <strong>Lastest Activity:</strong>
+    </div>
+    <div class="col-md-3">
+        <p><%=user.personalID.log[user.personalID.log.length-1]%></p>
+    </div>
+    <div class="col-md-1"> <!-- Adjusted column size -->
+        <a href="/profile/<%=user.username%>/activity">Detail</a>
+    </div>
 </div>
 
-<!-- Confirmation Code Field -->
-<div class="row" id="confirmationCodeField" style="display: none;">
-    <div class="col-md-4"> <!-- Adjusted column size -->
-        <div class="form-group">
-            <label for="confirmationCode">Confirm Code:</label>
-            <input type="text" id="confirmationCode">
-        </div>
+<div class="row" style="padding-bottom: 20px; border-bottom: 5px solid #b5b9bd;">
+    <div class="col-md-3"></div>
+    <div class="col-md-2"> <!-- Adjusted column size -->
+        <strong>Email: </strong>
     </div>
-    <div class="col-md-6"> <!-- Adjusted column size -->
-        <button type="button" id="confirmCodeButton" class="btn btn-primary">Confirm</button>
+    <div class="col-md-3">
+        <p><%= user.email %></p>
+    </div>
+    <div class="col-md-1"> <!-- Adjusted column size -->
+        <a>Change</a>
     </div>
 </div>
+<form action="/profile/<%=user.username%>/setting" method="post">
+    <div class="row" style="padding-bottom: 20px;">
+        <div class="col-md-3"></div>
+        <div class="col-md-2"> <!-- Adjusted column size -->
+            <strong>Notification: </strong>
+        </div>
+        
+            <div class="col-md-3">
+                <select id="notify" name="notify">
+                    <option value=true <%= user.personalID.notify===true ? 'selected' : '' %>>Enabled</option>
+                    <option value=false <%= user.personalID.notify===false ? 'selected' : '' %>>Disabled</option>
+                </select>
+            </div>
+    </div>
+    <div class="row" style="padding-bottom: 20px;">
+        <div class="col-md-3"></div>
+        <div class="col-md-2"> <!-- Adjusted column size -->
+            <strong>Dark Mode:</strong>
+        </div>
+        <div class="col-md-3">
+            <select id="darkMode" name="darkMode">
+                <option value=true <%= user.personalID.darkMode===true ? 'selected' : '' %>>Enabled</option>
+                <option value=false <%= user.personalID.darkMode===false ? 'selected' : '' %>>Disabled</option>
+            </select>
+        </div>
+        <div class="col-md-1"> <!-- Adjusted column size -->
+            <button type="submit" class="btn btn-success">Change</button>
+        </div>
+    </div>
+</form>
 
 <%- include ("../_partial/_footer.ejs"); %>
-
-<script>
-    document.getElementById('changeButton').addEventListener('click', function() {
-        document.getElementById('confirmationCodeField').style.display = 'block'; // Show confirmation code field
-    });
-
-    document.getElementById('confirmCodeButton').addEventListener('click', function() {
-        var confirmationCode = document.getElementById('confirmationCode').value;
-        // Perform actions based on the entered confirmation code
-        // You can add your logic here
-        console.log("Confirmation Code Entered: " + confirmationCode);
-        // Hide the confirmation code field
-        document.getElementById('confirmationCodeField').style.display = 'none';
-    });
-</script>
