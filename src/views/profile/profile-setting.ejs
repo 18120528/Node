@@ -1,118 +1,52 @@
 <%- include ("../_partial/_header.ejs"); %>
 
-<style>
-    /* Custom CSS for toggle buttons */
-    .btn-toggle {
-        border: 2px solid #007bff; /* Blue border */
-        border-radius: 5px;
-        padding: 8px 16px;
-        margin-right: 10px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .btn-toggle.active {
-        background-color: #007bff; /* Blue background for active state */
-        border-color: #007bff; /* Blue border for active state */
-        color: #fff; /* White text for active state */
-    }
-
-    .btn-toggle:not(.active) {
-        background-color: #f8f9fa; /* Light gray background for inactive state */
-        color: #000; /* Black text for inactive state */
-    }
-
-    .form-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    label {
-        font-weight: bold;
-        margin-right: 10px;
-        color: #555;
-    }
-
-    h2 {
-        color: #007bff;
-        margin-bottom: 20px;
-    }
-
-    .btn-save {
-        background-color: #007bff;
-        border: none;
-        border-radius: 5px;
-        color: #fff;
-        padding: 10px 20px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-save:hover {
-        background-color: #0056b3;
-    }
-</style>
-
-<div class="row">
+<div class="row" style="padding-bottom: 20px;">
     <div class="col-md-6">
-        <form id="settingsForm" action="/profile/<%= user.username %>/setting" method="POST">
-            <h2><%= user.username %>'s Settings</h2>
-            <div class="form-group">
-                <label for="emailTitle">Email:</label>
-                <input type="email" id="emailTitle" name="email" class="form-control" value="<%= user.email %>">
-            </div>
-            <div class="form-group">
-                <label for="alertToggle">Alert:&nbsp;</label>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-primary btn-toggle active" id="alertOffBtn" data-value="off">Off</label>
-                    <label class="btn btn-primary btn-toggle" id="alertOnBtn" data-value="on">On</label>
-                </div>
-                <input type="hidden" id="alertState" name="alertState" value="off"> <!-- Hidden input for alert state -->
-            </div>
-            <div class="form-group" style="padding-left: 46px;">
-                <button type="submit" class="btn btn-save" id="saveButton">Save</button>
-            </div>
-        </form>
+        <h1 style="font-size: 2.5em; font-weight: bold;">Setting</h1>
     </div>
-    <div class="col-md-6">
-        <div class="d-flex justify-content-center">
-            <img src="https://i.ibb.co/1Qx9MmF/11f7815c670216f78272924c60e5d32caf075b7775137552c652113900060c5b-1.jpg" alt="img" class="img-fluid" style="max-height: 400px;">
+</div>
+<div class="row">
+    <form id="changeEmailForm">
+        <div class="col-md-4"> <!-- Adjusted column size -->
+            <div class="form-group">
+                <label for="email" style="padding-right: 55px;">Email:</label>
+                <input type="email" id="email" name="email" value="<%= user.email %>">
+            </div>
         </div>
+        <div class="col-md-6"> <!-- Adjusted column size -->
+            <div class="form-group">
+                <button type="button" id="changeButton" class="btn btn-primary">Change</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Confirmation Code Field -->
+<div class="row" id="confirmationCodeField" style="display: none;">
+    <div class="col-md-4"> <!-- Adjusted column size -->
+        <div class="form-group">
+            <label for="confirmationCode">Confirm Code:</label>
+            <input type="text" id="confirmationCode">
+        </div>
+    </div>
+    <div class="col-md-6"> <!-- Adjusted column size -->
+        <button type="button" id="confirmCodeButton" class="btn btn-primary">Confirm</button>
     </div>
 </div>
 
-<script>
-    // Event listener to update hidden input value before form submission
-    document.getElementById('settingsForm').addEventListener('submit', function(event) {
-        // Update the value of alertState input based on the active toggle button
-        const alertState = document.querySelector('.btn-toggle.active').dataset.value;
-        document.getElementById('alertState').value = alertState;
-    });
-
-    // Toggle button event listeners
-    document.getElementById('alertOffBtn').addEventListener('click', function() {
-        toggleAlertState('off');
-    });
-
-    document.getElementById('alertOnBtn').addEventListener('click', function() {
-        toggleAlertState('on');
-    });
-
-    function toggleAlertState(state) {
-        // Update UI to reflect alert status
-        const alertOffBtn = document.getElementById('alertOffBtn');
-        const alertOnBtn = document.getElementById('alertOnBtn');
-        if (state === 'off') {
-            alertOffBtn.classList.add('active');
-            alertOnBtn.classList.remove('active');
-        } else {
-            alertOffBtn.classList.remove('active');
-            alertOnBtn.classList.add('active');
-        }
-        // Update value
-        document.getElementById('alertState').value = state;
-    }
-</script>
-
 <%- include ("../_partial/_footer.ejs"); %>
+
+<script>
+    document.getElementById('changeButton').addEventListener('click', function() {
+        document.getElementById('confirmationCodeField').style.display = 'block'; // Show confirmation code field
+    });
+
+    document.getElementById('confirmCodeButton').addEventListener('click', function() {
+        var confirmationCode = document.getElementById('confirmationCode').value;
+        // Perform actions based on the entered confirmation code
+        // You can add your logic here
+        console.log("Confirmation Code Entered: " + confirmationCode);
+        // Hide the confirmation code field
+        document.getElementById('confirmationCodeField').style.display = 'none';
+    });
+</script>

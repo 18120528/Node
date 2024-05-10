@@ -20,10 +20,11 @@ router.get("/", ifAdmin, async (req, res) => {
 //Update Roles
 router.post("/role", ifAdmin, async(req,res)=> {
     let usernames=req.body.username;
+    let actives=req.body.active;
     let roles=req.body.role;
     await usernames.forEach(async (username, index)=>
     {
-        await user.updateOne({username: username}, {role: roles[index]});
+        await user.updateOne({username: username}, {role: roles[index], active: actives[index]});
     });
     res.status(200).redirect("/dashboard");
 });

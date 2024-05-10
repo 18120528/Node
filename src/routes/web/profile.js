@@ -12,6 +12,8 @@ const ifAuthorized=require('../../middlewares/auth/author');
 const User = require('../../models/users');
 // Set up middleware
 router.use(ifLoggin);
+//Controller
+const {sendEmail, mailOptions}=require('../../controllers/sendEmail');
 //Default routing 
 router.get("/", (req, res) => {
     if(res.locals.error[0]==='The user does not exist!!!')

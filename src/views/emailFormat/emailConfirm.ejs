@@ -28,15 +28,14 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Password Reset</h1>
+            <h1>Activate Your Account</h1>
         </div>
         <div class="body">
             <p>Dear <%= content.username %>,</p>
-            <p>We received a request to reset your password. Please find your new password below:</p>
+            <p>Click this link to activate your account:</p>
             <div class="password">
-                <strong><%= content.password %></strong>
+                <a href="https://node-3ywp.onrender.com/accountactive/<%= content.code %>">localhost:9000/accountactive/<%= content.code %></a>
             </div>
-            <p>Please login with your new password and change it to a more secure one as soon as possible.</p>
             <p>Thank you.</p>
         </div>
         <div class="signature">
