@@ -32,8 +32,12 @@ router.get('/', async(req,res)=>
             Session.create({userID: req.user.id, sessionID: req.sessionID});
         }
     }
+    let pageNum = parseInt(req.query.page) || 1;
+    let startIndex = (pageNum - 1) * 15;
+    let endIndex = startIndex + 15;
     let postList=await post.find().sort({ createDate: -1 });
-    res.status(200).render("home/index",{postList});
+    let partedList=postList.slice(startIndex, endIndex);
+    res.status(200).render("home/index",{postList: partedList, pageNum, max: Math.ceil(postList.length/15) });
 });
 router.get('/about',async(req,res)=>
 {

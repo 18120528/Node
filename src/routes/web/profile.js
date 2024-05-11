@@ -82,8 +82,13 @@ router.post('/:username/setting', ifAuthorized, async(req,res)=>
 router.get('/:username/activity', ifAuthorized, async(req,res)=>
 {
     try {
+        let pageNum = parseInt(req.query.page) || 1;
+        let startIndex = (pageNum - 1) * 20;
+        let endIndex = startIndex + 20;
         let user = await User.findOne({username: req.params.username}).populate({path: 'personalID'});
-        res.status(200).render("profile/profile-activity", { user });
+        let logs = user.personalID.log.reverse();
+        let partedLogs=logs.slice(startIndex, endIndex);
+        res.status(200).render("profile/profile-activity", { logs: partedLogs, pageNum, max: Math.ceil(logs.length/20) });
     } catch (err) {
         if (err) {
             req.flash("error", err.message);
