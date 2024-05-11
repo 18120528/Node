@@ -17,8 +17,12 @@ router.use(ifLoggin);
 // Post page
 router.get("/", async (req, res) => {
     try {
-        const postList = await post.find({ UserID: req.user._id }).sort({ createDate: -1 });
-        res.status(200).render("posts/myPost", { postList });
+        let pageNum = parseInt(req.query.page) || 1;
+        let startIndex = (pageNum - 1) * 15;
+        let endIndex = startIndex + 15;
+        let postList = await post.find({ UserID: req.user._id }).sort({ createDate: -1 });
+        let partedList=postList.slice(startIndex, endIndex);
+        res.status(200).render("posts/myPost", {postList: partedList, pageNum, max: Math.ceil(postList.length/15) });
     } catch (err) {
         if (err) {
             req.flash("error", err.message);
@@ -68,9 +72,13 @@ router.post("/add", upload.single('image'), async (req, res) => {
 // Access
 router.get('/:postID', async (req, res) => {
     try {
+        let pageNum = parseInt(req.query.page) || 1;
+        let startIndex = (pageNum - 1) * 20;
+        let endIndex = startIndex + 20;
         let Post = await post.findById(req.params.postID).populate({ path: 'comments', options: { sort: { createDate: -1 } } });
-        let comments = Post.comments;
-        res.render("posts/singlePost", { Post,  comments });        
+        let commentList = Post.comments;
+        let partedList=commentList.slice(startIndex, endIndex);
+        res.render("posts/singlePost", { Post,  comments: partedList, pageNum, max: Math.ceil(commentList.length/20) });        
     } catch (err) {
         req.flash("error", err);
         res.redirect("/post");

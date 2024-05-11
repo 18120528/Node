@@ -1,12 +1,36 @@
 <%- include ("../_partial/_header.ejs"); %>
     <div class="row">
         <div class="col-md-6">
-            <h1 style="font-size: 2.5em; font-weight: bold;"><%=user.username%>'s activities:</h1>
+            <h1 style="font-size: 35px; font-weight: bold;">Lastest's activities:</h1><!-- 1em=14px -->
         </div>
     </div>
-    <% user.personalID.log.reverse().forEach( log=>{%>
-        <div class="row" style="text-align: center;">
+    <% logs.forEach( log=>{%>
+        <div class="row" style="text-align: center;  border-bottom: 1px solid #b5b9bd; padding-bottom: 2px; padding-top: 10px;">
             <p><%=log%></p>
         </div>
     <%})%>
+    <div class="pagination">
+        <% let start = Math.max(1, pageNum - 3); %>
+        <% let end = Math.min(max, start + 6); %>
+        <% if (start > 1) { %>
+            <a href="?page=1" class="btn btn-sm btn-light font-weight-bold" style="font-size: 20px;">1</a>
+            <% if (start > 2) { %>
+                <span class="btn btn-sm btn-light font-weight-bold disabled" style="font-size: 20px;">...</span>
+            <% } %>
+        <% } %>
+        <% for (let page = start; page <= end; page++) { %>
+            <% if (pageNum === page) { %>
+                <span class="btn btn-sm btn-primary font-weight-bold disabled" style="font-size: 20px;"><%= page %></span>
+            <% } else { %>
+                <a href="?page=<%= page %>" class="btn btn-sm btn-light font-weight-bold" style="font-size: 20px;"><%= page %></a>
+            <% } %>
+        <% } %>
+        <% if (end < max) { %>
+            <% if (end < max - 1) { %>
+                <span class="btn btn-sm btn-light font-weight-bold disabled" style="font-size: 20px;">...</span>
+            <% } %>
+            <a href="?page=<%= max %>" class="btn btn-sm btn-light font-weight-bold" style="font-size: 20px;"><%= max %></a>
+        <% } %>
+    </div>    
+        
 <%- include ("../_partial/_footer.ejs"); %>
