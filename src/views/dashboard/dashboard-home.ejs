@@ -1,7 +1,29 @@
 <%- include ("../_partial/_header.ejs"); %>
-    <div class="row" style="border-bottom: 1px solid #b5b9bd">
+    <div class="row" style="border-bottom: 1px solid #b5b9bd; padding-bottom: 25px;">
         <div class="col-md-6">
             <h1 style="font-size: 2.5em; font-weight: bold;">Dashboard</h1>
+        </div>
+        <div class="col-md-6" style="border-left: 2px solid #b5b9bd;">
+            <p>
+                <strong>
+                    Number of Users: 
+                </strong>
+                <%=users.length%> &#128104; | 
+                <%=users.filter(user => user.active).length%> <span style="color: green; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: green;"></span> | 
+                <%=users.filter(user => !user.active).length%> <span style="color: red; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: red;"></span>
+            </p>
+            <p>
+                <strong>
+                    Number of Posts: 
+                </strong>
+                <%=posts.length%> &#128220;
+            </p>
+            <p>
+                <strong>
+                    Online Users: 
+                </strong>
+                <%=sessions.length%> <span style="color: green; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: green;"></span>
+            </p>            
         </div>
     </div>
     <div class="row" style="border-top: 1px solid #b5b9bd; border-bottom: 1px solid #b5b9bd">
