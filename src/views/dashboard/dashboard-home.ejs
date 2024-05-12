@@ -41,8 +41,15 @@
         <input type="hidden" name="page" value="<%= pageNum %>">
         <% users.forEach(user => { %>
             <div class="row" style="border-top: 1px solid #b5b9bd; border-bottom: 1px solid #b5b9bd">
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <a href="/profile/<%= user.username %>"><h4><%= user.username %></h4></a>
+                </div>
+                <div class="col-md-1" style="padding-top: 5px;">
+                    <%if(sessions.find(obj => obj.userID === user._id.toString()) !== undefined){ %>
+                    <span style="color: green; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: green;"></span>
+                    <% }else{ %>
+                    <span style="color: red; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: red;"></span>
+                    <% } %>
                 </div>
                 <div class="col-md-2">
                     <input type="hidden" name="username" value="<%= user.username %>">

@@ -2,7 +2,9 @@
 
 // Import modules
 const express = require('express');
-const fs = require('fs').promises;
+const http = require('http');
+const { Server } = require("socket.io");
+//
 const path = require('path');
 const mongoose = require('mongoose');
 const uri = require('./models/remote/mongoProfile');
@@ -15,11 +17,18 @@ const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const cors = require("cors");
 const favicon = require('serve-favicon');
-// Connect to the database
+// Init
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+io.on('connection', (socket) => {
+    socket.on('chat message', (msg) => {
+      io.emit('chat message', msg);
+    });
+  });
+// Connect to the database
 mongoose.connect(uri);
 setUpPassport();
-
 // Middleware
 app.use(cors());
 app.use(cookieParser());
@@ -54,9 +63,8 @@ app.use('/src/upload/images', express.static(path.join(__dirname, '/upload/image
 app.use(favicon(path.join(__dirname, '/upload/resource/favicon.ico')));
 app.use('/', require('./routes/web/index'));
 app.use('/api', require('./routes/api/index'));
-
 // Start the server
 const PORT = 9000;
-app.listen(process.env.PORT || PORT, () => {
+server.listen(process.env.PORT || PORT, () => {
     console.log(`Server is running at Port: ${process.env.PORT || PORT}`);
 });

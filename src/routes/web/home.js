@@ -219,6 +219,9 @@ router.post('/forgetpwd', async (req, res)=>
         res.redirect('/forgetpwd');
     }
 });
-
+router.get('/message', async (req,res)=>
+{
+    res.status(200).render('home/messaging');
+});
 //export this module
 module.exports=router;
