@@ -1,3 +1,13 @@
 </div>
 </body>
+<% if(currentUser!=null) {%>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      socket.on('start chat', function(data) {
+        var chatUrl = '/chat/' + data.senderName;
+        window.open(chatUrl, '_blank');
+      });
+    </script>
+<% } %>
 </html>

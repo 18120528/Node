@@ -16,5 +16,6 @@ router.use('/',require('./home'));
 router.use('/post',require('./post'));
 router.use('/profile',require('./profile'));
 router.use('/dashboard',require('./dashboard'));
+router.use('/chat',require('./chat'));
 //export this module
 module.exports=router;
