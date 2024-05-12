@@ -37,10 +37,10 @@ router.post("/role", ifAdmin, async(req,res)=> {
         actives = [actives];
         roles = [roles];
     }
-    await usernames.forEach(async (username, index)=>
+    for (let index = 0; index < usernames.length; index++) 
     {
-        await User.updateOne({username: username}, {role: roles[index], active: actives[index]});
-    });
+        await User.updateOne({ username: usernames[index] }, { role: roles[index], active: actives[index] });
+    }
     res.status(200).redirect("/dashboard?page="+req.body.page);
 });
 // Export this module //TODO Delete image
