@@ -15,6 +15,11 @@
         <a href="/profile/<%= user.username%>/setting" class="btn btn-secondary">Setting</a>
     </div>
     <% } %>
+    <% if(currentUser.username!=user.username){ %>
+    <div class="col-md-1" style=" font-size: 30px; text-align: right;">
+        <a href="/chat/<%= user.username %>">&#128231;</a>
+    </div>
+    <% } %>
 </div>
 <div class="row">
     <div class="col-md-4">
