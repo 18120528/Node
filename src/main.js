@@ -54,11 +54,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //
 const users = {};
 const connection= {};
+
 io.use((socket, next) => {
     sessionMiddleware(socket.request, {}, next); // Pass session data to Socket.IO
 });
+
 io.on('connection', (socket) => {
-    const userID = socket.request.session.passport.user; // Get user ID from session
+    const userID = socket.request.session.passport.user||null; // Get user ID from session
     // Store the socket associated with the user ID
     users[userID] = socket;
     connection[userID]=socket.handshake.query.userID;
@@ -85,7 +87,7 @@ io.on('connection', (socket) => {
             {
                 let user=await User.findById(userID);
                 recipientSocket.emit('start chat', { senderName: user.username });
-                socket.emit('private message', { message: 'Please Wait!' });
+                socket.emit('private message', { message: 'Start:' });
             }
             else
             {

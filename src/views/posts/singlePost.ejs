@@ -94,7 +94,7 @@
     <% comments.forEach(cmt => { %>
     <div class="col-md-11" style="border-top: 1px solid #b5b9bd; border-bottom: 1px solid #b5b9bd">
         <h4 class="panel-body" style="background-color: #dad7d1b6;"><%= cmt.content %></h4>
-        <h6>By: <%= cmt.author %>, at: <%= new Date(cmt.createDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></h6>
+        <h6>By: <a href="/profile/<%= cmt.author %>"><%= cmt.author %></a>, at: <%= new Date(cmt.createDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></h6>
     </div>
     <% if(currentUser.role==='admin'||currentUser.role==='mod') { %>
     <div class="col-md-1">
