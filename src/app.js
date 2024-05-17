@@ -11,7 +11,7 @@ const uri = require('./models/remote/mongoProfile');
 const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
-const setUpPassport = require('./configs/passportStrategy');
+const setUpPassport = require('./Strategy/passportStrategy');
 const session = require("express-session");
 const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
 
     socket.on('private message', async ({ recipientId, message }) => {//recipientId: destination
         const recipientSocket = users[recipientId];
-        if (connection[recipientId]) {
+        if (connection[recipientId]) {//if in chat room?
             // Send the private message to the recipient
             if(userID===connection[recipientId])
             {
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
             {
                 let user=await User.findById(userID);
                 recipientSocket.emit('start chat', { senderName: user.username });
-                socket.emit('private message', { message: 'Start:' });
+                socket.emit('private message', { message: 'Reaching:' });
             }
             else
             {
@@ -102,8 +102,8 @@ app.set('view engine', 'ejs');
 // Define your routes
 app.use('/src/upload/images', express.static(path.join(__dirname, '/upload/images')));
 app.use(favicon(path.join(__dirname, '/upload/resource/favicon.ico')));
-app.use('/', require('./routes/web/index'));
-app.use('/api', require('./routes/api/index'));
+app.use('/', require('./routes/index'));
+app.use('/api', require('./api/index'));
 // Start the server
 const PORT = 9000;
 server.listen(process.env.PORT || PORT, () => {

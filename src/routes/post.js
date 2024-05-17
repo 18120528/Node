@@ -5,24 +5,32 @@ const express = require('express');
 const router = express.Router();
 const fs=require('fs');
 //custom middleware
-const post = require("../../models/formPost");
-const Cmt = require("../../models/comment");
-const User = require("../../models/users");
-const upload=require('../../middlewares/upload/uploadImage');
-const ifLoggin = require("../../middlewares/auth/authen");
-const ifMod = require("../../middlewares/auth/mod");
-const ifAuthorized=require('../../middlewares/auth/author');
+const post = require("../models/formPost");
+const Cmt = require("../models/comment");
+const User = require("../models/users");
+const upload=require('../middlewares/upload/uploadImage');
+const ifLoggin = require("../middlewares/auth/authen");
+const ifMod = require("../middlewares/auth/mod");
+const ifAuthorized=require('../middlewares/auth/author');
 // Set up middleware
 router.use(ifLoggin);
 // Post page
 router.get("/", async (req, res) => {
     try {
         let pageNum = parseInt(req.query.page) || 1;
-        let startIndex = (pageNum - 1) * 15;
-        let endIndex = startIndex + 15;
-        let postList = await post.find({ UserID: req.user._id }).sort({ createDate: -1 });
-        let partedList=postList.slice(startIndex, endIndex);
-        res.status(200).render("posts/myPost", {postList: partedList, pageNum, max: Math.ceil(postList.length/15) });
+        let pageSize = 15;
+        let skip = (pageNum - 1) * pageSize;
+        // Fetch the required subset of records
+        let postList = await post.find().sort({ createDate: -1 }).skip(skip).limit(pageSize);
+        // Count the total number of documents to calculate the maximum number of pages
+        let totalPosts = await post.countDocuments();
+        let maxPages = Math.ceil(totalPosts / pageSize);
+        //
+        res.status(200).render("posts/myPost", {
+        postList,
+        pageNum,
+        max: maxPages
+        });
     } catch (err) {
         if (err) {
             req.flash("error", err.message);
@@ -73,12 +81,21 @@ router.post("/add", upload.single('image'), async (req, res) => {
 router.get('/:postID', async (req, res) => {
     try {
         let pageNum = parseInt(req.query.page) || 1;
-        let startIndex = (pageNum - 1) * 20;
-        let endIndex = startIndex + 20;
+        let pageSize = 20;
+        let skip = (pageNum - 1) * pageSize;
+        // Fetch the required subset of records
         let Post = await post.findById(req.params.postID).populate({ path: 'comments', options: { sort: { createDate: -1 } } });
-        let commentList = Post.comments;
-        let partedList=commentList.slice(startIndex, endIndex);
-        res.render("posts/singlePost", { Post,  comments: partedList, pageNum, max: Math.ceil(commentList.length/20) });        
+        let comments = Post.comments;
+        // Count the total number of documents to calculate the maximum number of pages
+        let maxPages = Math.ceil(comments.length / pageSize);
+        comments=comments.slice(skip, skip + pageSize);
+        //
+        res.status(200).render("posts/singlePost", {
+        Post,
+        comments,
+        pageNum,
+        max: maxPages
+        });      
     } catch (err) {
         req.flash("error", err);
         res.redirect("/post");
