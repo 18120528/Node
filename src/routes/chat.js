@@ -3,9 +3,9 @@
 const express=require('express');
 const router=express.Router();
 //
-const User = require("../../models/users");
+const User = require("../models/users");
 //
-const ifLoggin = require("../../middlewares/auth/authen");
+const ifLoggin = require("../middlewares/auth/authen");
 //
 const selfChatCheck=function (req, res, next)
 {

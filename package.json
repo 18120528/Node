@@ -2,11 +2,11 @@
   "name": "noderender",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/main",
-    "dev": "nodemon src/main"
+    "start": "node src/app",
+    "dev": "nodemon src/app"
   },
   "keywords": [],
   "author": "",

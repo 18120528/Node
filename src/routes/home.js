@@ -5,13 +5,13 @@ const router=express.Router();
 var passport = require("passport");
 const crypto = require('crypto');
 //
-const post = require("../../models/formPost");
-const User=require('../../models/users');
-const Session=require('../../models/activeSession');
-const confirmCode=require('../../models/confirmCode');
-const personals=require('../../models/personal');
+const post = require("../models/formPost");
+const User=require('../models/users');
+const Session=require('../models/activeSession');
+const confirmCode=require('../models/confirmCode');
+const personals=require('../models/personal');
 //Controller
-const {sendEmail, mailOptions}=require('../../controllers/sendEmail');
+const {sendEmail, mailOptions}=require('../controllers/sendEmail');
 //Homepage
 router.get('/', async(req,res)=>
 {
@@ -33,11 +33,19 @@ router.get('/', async(req,res)=>
         }
     }
     let pageNum = parseInt(req.query.page) || 1;
-    let startIndex = (pageNum - 1) * 15;
-    let endIndex = startIndex + 15;
-    let postList=await post.find().sort({ createDate: -1 });
-    let partedList=postList.slice(startIndex, endIndex);
-    res.status(200).render("home/index",{postList: partedList, pageNum, max: Math.ceil(postList.length/15) });
+    let pageSize = 15;
+    let skip = (pageNum - 1) * pageSize;
+    // Fetch the required subset of records
+    let postList = await post.find().sort({ createDate: -1 }).skip(skip).limit(pageSize);
+    // Count the total number of documents to calculate the maximum number of pages
+    let totalPosts = await post.countDocuments();
+    let maxPages = Math.ceil(totalPosts / pageSize);
+    //
+    res.status(200).render("home/index", {
+    postList,
+    pageNum,
+    max: maxPages
+    });
 });
 router.get('/about',async(req,res)=>
 {
@@ -66,7 +74,7 @@ router.get('/logout',async (req,res,next)=>
 {
     if(req.user)
     {
-        await Session.findOneAndDelete({ userID: req.user.id, sessionID: req.sessionID });
+        await Session.findOneAndDelete({ sessionID: req.sessionID });//- userID: req.user.id,
         req.logOut((err)=>
         {
             if(err){return next(err);}
